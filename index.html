@@ -3,1069 +3,1704 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Business Translation - Interactive Quiz App</title>
-    <!-- Tailwind CSS -->
+    <title>Business Translation - Ôn Tập Trắc Nghiệm Full</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <!-- Google Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <script>
       tailwind.config = {
+        darkMode: "class",
         theme: {
           extend: {
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-            },
             colors: {
               brand: {
-                50: "#f0f7ff",
-                100: "#e0effe",
-                500: "#0284c7",
-                600: "#0284c7",
-                700: "#0369a1",
-                800: "#075985",
-                900: "#0c4a6e",
+                50: "#eff6ff",
+                100: "#dbeafe",
+                500: "#3b82f6",
+                600: "#2563eb",
+                700: "#1d4ed8",
               },
             },
           },
         },
       };
     </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
       .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
         height: 6px;
       }
       .custom-scrollbar::-webkit-scrollbar-track {
-        background: #f1f5f9;
-        border-radius: 4px;
+        background: transparent;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #cbd5e1;
         border-radius: 4px;
       }
-      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-      }
-
-      .option-card {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .option-card:hover:not(.disabled) {
-        transform: translateY(-2px);
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #475569;
       }
     </style>
   </head>
   <body
-    class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100 selection:text-sky-800"
+    class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200 flex flex-col font-sans"
   >
-    <!-- Header Navigation -->
+    <!-- HEADER -->
     <header
-      class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm"
+      class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30 shadow-sm"
     >
       <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+        class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center"
       >
-        <div class="flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-700 flex items-center justify-center text-white shadow-md shadow-sky-500/20"
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-graduation-cap text-brand-600 text-2xl"></i>
+          <h1
+            class="font-bold text-lg md:text-xl text-slate-900 dark:text-white"
           >
-            <i class="fa-solid fa-graduation-cap text-lg"></i>
-          </div>
-          <div>
-            <h1 class="font-bold text-slate-900 leading-tight">
-              Business Translation
-            </h1>
-            <p class="text-xs text-slate-500 font-medium">
-              Midterm Test - Practice Exam
-            </p>
-          </div>
+            Business Translation
+          </h1>
         </div>
+        <button
+          id="themeToggle"
+          class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition"
+        >
+          <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
+      </div>
 
-        <!-- Header Quick Stats -->
-        <div class="flex items-center gap-4 sm:gap-6">
-          <div class="text-right hidden sm:block">
-            <div
-              class="text-xs text-slate-400 font-medium uppercase tracking-wider"
-            >
-              Tiến độ
-            </div>
-            <div class="text-sm font-bold text-slate-700">
-              <span id="header-completed-count">0</span>/25
-              <span class="text-xs font-normal text-slate-500">câu</span>
-            </div>
-          </div>
-          <button
-            id="btn-reset"
-            onclick="resetQuiz()"
-            class="text-slate-500 hover:text-slate-800 p-2 rounded-lg hover:bg-slate-100 transition-colors"
-            title="Làm lại bài"
-          >
-            <i class="fa-solid fa-rotate-right"></i>
-          </button>
+      <!-- TABS MÃ ĐỀ THI -->
+      <div class="max-w-4xl mx-auto px-2">
+        <div
+          id="tabsContainer"
+          class="flex space-x-2 overflow-x-auto custom-scrollbar pb-2 pt-1 text-sm font-medium"
+        >
+          <!-- Dynamic Tabs injected by JS -->
         </div>
       </div>
     </header>
 
-    <!-- Main Content Grid -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <!-- Left Area: Question Container (Col 8) -->
-        <div class="lg:col-span-8 space-y-6">
-          <!-- Progress Bar Top -->
-          <div
-            class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col gap-2"
-          >
-            <div
-              class="flex justify-between items-center text-xs font-semibold text-slate-500"
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl mx-auto px-4 py-6 flex-1 w-full">
+      <div id="quizApp" class="space-y-6">
+        <!-- HEADER CÂU HỎI & PROGRESS -->
+        <div
+          id="quizHeader"
+          class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-3"
+        >
+          <div>
+            <h2
+              id="currentTestTitle"
+              class="font-bold text-slate-900 dark:text-white"
             >
-              <span
-                >CÂU HỎI
-                <span
-                  id="current-question-num"
-                  class="text-sky-600 font-bold text-sm"
-                  >1</span
-                >
-                / 25</span
-              >
-              <span id="progress-percent" class="text-slate-600"
-                >0% Hoàn thành</span
-              >
-            </div>
-            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-              <div
-                id="main-progress-bar"
-                class="bg-sky-600 h-full rounded-full transition-all duration-300 w-0"
-              ></div>
-            </div>
+              Practice Test 1
+            </h2>
+            <p
+              id="questionCounter"
+              class="text-xs text-slate-500 dark:text-slate-400"
+            >
+              Câu 1 / 15
+            </p>
           </div>
-
-          <!-- Active Question Box -->
-          <div
-            class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden animate-fade-in"
-            id="question-card"
-          >
-            <!-- Question Header & Statement -->
-            <div class="p-6 sm:p-8 border-b border-slate-100 bg-slate-50/50">
-              <div class="flex items-start justify-between gap-4 mb-3">
-                <span
-                  id="question-badge"
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-800"
-                >
-                  Câu hỏi 1
-                </span>
-                <span
-                  id="filled-note-badge"
-                  class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200"
-                >
-                  <i class="fa-solid fa-lightbulb text-amber-600"></i> Đã điền
-                  đáp án bổ sung
-                </span>
-              </div>
-              <h2
-                id="question-text"
-                class="text-slate-900 font-semibold text-lg sm:text-xl leading-relaxed"
-              >
-                Loading question...
-              </h2>
-            </div>
-
-            <!-- Options List -->
-            <div class="p-6 sm:p-8 space-y-3" id="options-container">
-              <!-- Options injected dynamically by JavaScript -->
-            </div>
-
-            <!-- Explanation Box (Hidden by default until user answers or clicks show) -->
-            <div
-              id="explanation-box"
-              class="hidden mx-6 mb-6 sm:mx-8 sm:mb-8 p-4 sm:p-5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-sm animate-fade-in"
+          <div class="flex items-center gap-2">
+            <span
+              id="scoreBadge"
+              class="hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800"
             >
-              <div
-                class="flex items-center gap-2 font-bold mb-1.5 text-amber-900"
-              >
-                <i class="fa-solid fa-circle-info text-amber-600 text-base"></i>
-                Giải thích chi tiết:
-              </div>
-              <div
-                id="explanation-text"
-                class="leading-relaxed font-normal text-slate-700"
-              >
-                Loading explanation...
-              </div>
-            </div>
-
-            <!-- Action Bar Bottom -->
-            <div
-              class="bg-slate-50/80 px-6 py-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3"
+              Đã nộp: <span id="scoreText">0/0</span>
+            </span>
+            <button
+              id="resetBtn"
+              class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
             >
-              <button
-                id="btn-toggle-explanation"
-                onclick="toggleExplanation()"
-                class="text-xs font-semibold text-slate-600 hover:text-sky-600 transition-colors flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-200/50"
-              >
-                <i class="fa-solid fa-eye"></i>
-                <span id="toggle-exp-text">Xem giải thích</span>
-              </button>
-
-              <div class="flex items-center gap-2 ml-auto">
-                <button
-                  id="btn-prev"
-                  onclick="prevQuestion()"
-                  class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-chevron-left text-xs"></i> Trước
-                </button>
-                <button
-                  id="btn-next"
-                  onclick="nextQuestion()"
-                  class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold shadow-md shadow-sky-600/20 disabled:opacity-40 transition-all flex items-center gap-2"
-                >
-                  Tiếp <i class="fa-solid fa-chevron-right text-xs"></i>
-                </button>
-              </div>
-            </div>
+              <i class="fa-solid fa-rotate-right mr-1"></i> Làm lại
+            </button>
           </div>
         </div>
 
-        <!-- Right Area: Question Navigation Grid & Results (Col 4) -->
-        <div class="lg:col-span-4 space-y-6">
-          <!-- Score Summary Box (Appears after submission/progress) -->
+        <!-- DANH SÁCH SỐ CÂU HỎI (PAGINATION PALETTE) -->
+        <div
+          class="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700"
+        >
           <div
-            class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm"
+            id="questionGrid"
+            class="flex flex-wrap gap-2 justify-center sm:justify-start"
           >
-            <h3
-              class="text-slate-900 font-bold text-base mb-4 flex items-center gap-2"
-            >
-              <i class="fa-solid fa-chart-pie text-sky-600"></i> Tổng quan kết
-              quả
-            </h3>
+            <!-- Dynamic Question Buttons injected by JS -->
+          </div>
+        </div>
 
-            <div class="grid grid-cols-2 gap-3 mb-4">
-              <div
-                class="p-3 rounded-xl bg-slate-50 border border-slate-100 text-center"
-              >
-                <div class="text-xs text-slate-500 font-medium">Đã trả lời</div>
-                <div
-                  class="text-xl font-bold text-slate-800"
-                  id="stat-answered"
-                >
-                  0/25
-                </div>
-              </div>
-              <div
-                class="p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-center"
-              >
-                <div class="text-xs text-emerald-600 font-medium">
-                  Số câu đúng
-                </div>
-                <div
-                  class="text-xl font-bold text-emerald-700"
-                  id="stat-correct"
-                >
-                  0
-                </div>
-              </div>
-            </div>
+        <!-- ANCHOR CHO SCROLL KHI SANG CÂU MỚI -->
+        <div id="questionAnchor" class="scroll-mt-24"></div>
 
-            <div class="pt-2">
-              <button
-                id="btn-submit-quiz"
-                onclick="finishQuiz()"
-                class="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
-              >
-                <i class="fa-solid fa-flag-checkered"></i> Nộp bài & Xem tổng
-                kết
-              </button>
-            </div>
+        <!-- QUESTION CARD -->
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 md:p-6 transition-all"
+        >
+          <div
+            id="questionContent"
+            class="text-base md:text-lg font-semibold text-slate-900 dark:text-slate-100 mb-5 leading-relaxed"
+          >
+            <!-- Question text injected by JS -->
           </div>
 
-          <!-- Navigation Grid Palette -->
-          <div
-            class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm"
-          >
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-slate-900 font-bold text-base">
-                Danh sách câu hỏi
-              </h3>
-              <span class="text-xs text-slate-400 font-medium"
-                >Bấm để nhảy câu</span
-              >
-            </div>
-
-            <!-- Legend -->
-            <div
-              class="flex items-center gap-3 text-xs text-slate-600 mb-4 flex-wrap"
-            >
-              <div class="flex items-center gap-1.5">
-                <span
-                  class="w-3 h-3 rounded-md bg-slate-100 border border-slate-300 inline-block"
-                ></span>
-                Chưa làm
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span
-                  class="w-3 h-3 rounded-md bg-emerald-500 inline-block"
-                ></span>
-                Đúng
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span
-                  class="w-3 h-3 rounded-md bg-rose-500 inline-block"
-                ></span>
-                Sai
-              </div>
-            </div>
-
-            <!-- 1 - 25 Number Grid -->
-            <div class="grid grid-cols-5 gap-2.5" id="nav-grid">
-              <!-- Generated by JavaScript -->
-            </div>
+          <!-- OPTIONS -->
+          <div id="optionsContainer" class="space-y-3">
+            <!-- Option items injected by JS -->
           </div>
+
+          <!-- EXPLANATION / FEEDBACK -->
+          <div
+            id="explanationBox"
+            class="hidden mt-6 p-4 rounded-xl border text-sm leading-relaxed"
+          >
+            <!-- Feedback injected by JS -->
+          </div>
+        </div>
+
+        <!-- CONTROLS BUTTONS -->
+        <div class="flex justify-between items-center gap-3 pt-2">
+          <button
+            id="prevBtn"
+            class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2"
+          >
+            <i class="fa-solid fa-chevron-left"></i>
+            <span>Trước</span>
+          </button>
+
+          <button
+            id="checkBtn"
+            class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium shadow-sm transition flex items-center gap-2"
+          >
+            <i class="fa-solid fa-check"></i>
+            <span>Kiểm tra</span>
+          </button>
+
+          <button
+            id="nextBtn"
+            class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2"
+          >
+            <span>Tiếp</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
         </div>
       </div>
     </main>
 
-    <!-- Final Result Modal -->
-    <div
-      id="result-modal"
-      class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-fade-in"
-    >
-      <div
-        class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 text-center relative overflow-hidden"
-      >
-        <div
-          class="w-20 h-20 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mb-4 shadow-inner"
-        >
-          <i class="fa-solid fa-trophy"></i>
-        </div>
-
-        <h2 class="text-2xl font-bold text-slate-900 mb-1">
-          Hoàn thành bài kiểm tra!
-        </h2>
-        <p class="text-slate-500 text-sm mb-6">
-          Kết quả môn Business Translation (Midterm Test)
-        </p>
-
-        <!-- Score Display Box -->
-        <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 mb-6">
-          <div
-            class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1"
-          >
-            Tỉ lệ chính xác
-          </div>
-          <div
-            class="text-4xl font-extrabold text-sky-600 mb-2"
-            id="modal-score-percent"
-          >
-            0%
-          </div>
-          <div class="text-sm font-medium text-slate-700">
-            Đúng
-            <span id="modal-correct-count" class="text-emerald-600 font-bold"
-              >0</span
-            >
-            trên tổng số <span class="font-bold text-slate-900">25</span> câu
-          </div>
-        </div>
-
-        <!-- Modal Action Buttons -->
-        <div class="flex items-center gap-3">
-          <button
-            onclick="closeModal()"
-            class="flex-1 py-3 px-4 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-100 transition-all"
-          >
-            Xem lại bài
-          </button>
-          <button
-            onclick="
-              resetQuiz();
-              closeModal();
-            "
-            class="flex-1 py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm shadow-md shadow-sky-600/20 transition-all"
-          >
-            Làm lại từ đầu
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer
-      class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500"
+      class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-4 text-center text-xs text-slate-500 dark:text-slate-400 mt-8"
     >
-      <div class="max-w-7xl mx-auto px-4">
-        Business Translation Practice Platform &bull; Built with Interactive
-        Quiz Engine
-      </div>
+      Môn học: Business Translation • Interactive Test App
     </footer>
 
+    <!-- JAVASCRIPT DATA & LOGIC -->
     <script>
-      // Data structure containing all 25 questions from DOCX
-      const questionsData = [
+      // --- NGUỒN DỮ LIỆU ĐỀ THI TỪ FILE DOCX ---
+      const ALL_TESTS = [
         {
-          id: 1,
-          question:
-            "Why might a translator choose to omit a word or expression during translation?",
-          options: [
-            "To use a loan word in its place",
-            "When the term is not essential to the text's development",
-            "When the term does not have a cultural equivalent",
-            "To make the text longer and more complex",
+          id: "pt1",
+          title: "Practice Test 1",
+          questions: [
+            {
+              q: 'What does Catford define as "level shifts"?',
+              options: [
+                "Differences in stylistic choices",
+                "Shifts in morphological or graphological aspects",
+                "Variations in sentence length",
+                "Changes in cultural context",
+              ],
+              answer: 1,
+              exp: "Level shifts refer to changes that occur within the linguistic levels, such as morphology or graphology, indicating shifts in the form of words or writing styles during translation.",
+            },
+            {
+              q: "What type of equivalence deals with structure and cohesion in a text?",
+              options: ["Denotative", "Grammatical", "Textual", "Pragmatic"],
+              answer: 2,
+              exp: "Textual equivalence refers to cohesion and structural consistency between the source and target texts.",
+            },
+            {
+              q: "How should contextual factors be handled in translation?",
+              options: [
+                "They should be used to justify omitting culturally irrelevant content.",
+                "They should dictate changes to the original meaning.",
+                "They should be considered, but facts should remain unchanged.",
+                "They should be ignored entirely to maintain fidelity to the text.",
+              ],
+              answer: 2,
+              exp: "Culture, and language is important, the facts of the original text must not be altered.",
+            },
+            {
+              q: "What characterizes an overt translation, according to House?",
+              options: [
+                "It is functionally equivalent to the source text (ST)",
+                "It attempts to recreate a second original text",
+                "It directly addresses the target culture (TC) audience",
+                "It must clearly be recognized as a translation by the target audience",
+              ],
+              answer: 3,
+              exp: "An overt translation is characterized by the fact that the target text (TT) audience understands that they are reading a translation.",
+            },
+            {
+              q: "What is the relationship between translation theories and the concept of equivalence?",
+              options: [
+                "Translation theories are unrelated to the concept of equivalence",
+                "Only target-oriented theories are connected to equivalence",
+                "All translation theories are related to the concept of equivalence in one way or another",
+                "Only source-oriented theories consider equivalence",
+              ],
+              answer: 2,
+              exp: "All translation theories are related to the notion of equivalence in one way or another.",
+            },
+            {
+              q: "What is the focus of Nida’s dynamic equivalence?",
+              options: [
+                "Reproducing the original impact",
+                "Following word order",
+                "Preserving cultural terms",
+                "Matching grammar rules",
+              ],
+              answer: 0,
+              exp: "Dynamic equivalence aims to create the same effect on the target audience as the original did on the source audience.",
+            },
+            {
+              q: "What does Baker’s concept of equivalence at the word level refer to?",
+              options: [
+                "The overall message conveyed in the source and target texts",
+                "The grammatical structures used in the source and target languages",
+                "The cohesion between sentences in a text",
+                "The translation of individual words and their meanings",
+              ],
+              answer: 3,
+              exp: "Baker discusses equivalence at the word level as relating to the direct translation of individual words from the source language (SL) to the target language (TL).",
+            },
+            {
+              q: "What is the main advantage of using a loan word plus an explanation in translation?",
+              options: [
+                "It allows the translator to avoid complex paraphrasing",
+                "It reduces the word count in translation",
+                "It helps in maintaining the original cultural reference while clarifying its meaning",
+                "It eliminates the need for cultural substitution",
+              ],
+              answer: 2,
+              exp: "Including an explanation ensures that the meaning of the loan word is understood while preserving the cultural reference.",
+            },
+            {
+              q: "What is the primary focus of formal equivalence according to Nida (1964)?",
+              options: [
+                "The emotional impact of the translation on the target audience",
+                "Achieving a close match of form and content between source and target languages",
+                "The cultural adaptation of the target text",
+                "The grammatical accuracy of the translation",
+              ],
+              answer: 1,
+              exp: "Formal equivalence emphasizes creating a direct correlation in form and content between the source and target texts.",
+            },
+            {
+              q: 'What does "faithfulness" in translation refer to?',
+              options: [
+                "Making the translation sound natural in the target language",
+                "Accurately rendering the meaning of the source text without adding or subtracting from it",
+                "Maintaining the original sentence structure exactly",
+                "Adapting the translation to fit the target culture",
+              ],
+              answer: 1,
+              exp: "Faithfulness refers to accurately conveying the original meaning without altering or distorting any part of it.",
+            },
+            {
+              q: "How does translating by paraphrasing using a related word differ from paraphrasing using unrelated words?",
+              options: [
+                "It completely changes the meaning of the source term",
+                "It avoids the use of general terms or superordinates",
+                "It always involves cultural substitution",
+                "It uses a word that has a similar meaning and form in the target language",
+              ],
+              answer: 3,
+              exp: "This approach employs a term that shares a relationship with the original word but may be more commonly used in the target language.",
+            },
+            {
+              q: "What does pragmatic equivalence refer to in Baker’s approach?",
+              options: [
+                "Strategies of avoidance and the cultural implications of translation choices",
+                "The grammatical alignment between source and target texts",
+                "The relationship between text and context",
+                "The use of cohesive devices in translation",
+              ],
+              answer: 0,
+              exp: "Pragmatic equivalence involves understanding the cultural nuances and context in which a translation occurs.",
+            },
+            {
+              q: "What is the purpose of including multiple native speakers in the translation team?",
+              options: [
+                "To simplify the translation process",
+                "To adapt the translation to multiple dialects",
+                "To provide additional interpretation of the original text",
+                "To carry out checks for accuracy and ensure quality",
+              ],
+              answer: 3,
+              exp: "Having multiple native speakers helps conduct thorough accuracy checks, ensuring the quality of the translation.",
+            },
+            {
+              q: "What are the two types of equivalents identified by Catford?",
+              options: [
+                "Linguistic and cultural equivalents",
+                "Literal and free equivalents",
+                "Formal and dynamic equivalents",
+                "Absolute and relative equivalents",
+              ],
+              answer: 0,
+              exp: "Catford categorizes equivalence into linguistic and cultural types.",
+            },
+            {
+              q: "What type of testing should be conducted to assess the quality of the translation?",
+              options: [
+                "Automated software testing for grammatical accuracy",
+                "Oral and written tests with a variety of native speakers",
+                "Informal reviews by the translation team",
+                "Only written tests with experts in the source language",
+              ],
+              answer: 1,
+              exp: "Oral and written tests with a diverse group of native speakers ensure the translation's naturalness and accuracy.",
+            },
           ],
-          correctIndex: 1,
-          explanation:
-            "Translators use omission when a term is not essential to the overall development or meaning of the text, avoiding unnecessary redundancy.",
         },
         {
-          id: 2,
-          question:
-            "Which type of non-equivalence arises when a concept exists in the source culture but has no direct word in the target language?",
-          options: [
-            "Semantic complexity",
-            "Perspective difference",
-            "Non-lexicalised concept",
-            "Culture-specific concept",
+          id: "pt2",
+          title: "Practice Test 2",
+          questions: [
+            {
+              q: "In House’s theory, which translation is addressed directly to the target culture?",
+              options: ["Covert", "Literal", "Overt", "Intralingual"],
+              answer: 0,
+              exp: "Covert translation is designed to function as if originally written for the target audience.",
+            },
+            {
+              q: "What is the main goal of dynamic equivalence?",
+              options: [
+                "Triggering the same effect on the target audience as the original text had on the source audience",
+                "Ensuring a translation that is only accessible to a scholarly audience",
+                "Reproducing the source text's word-for-word structure",
+                "Maintaining the same grammatical patterns as the original text",
+              ],
+              answer: 0,
+              exp: "Dynamic equivalence aims to convey the meaning and emotional impact so the target audience experiences it the same way.",
+            },
+            {
+              q: "What is the primary purpose of a business profile?",
+              options: [
+                "To train employees on company policies",
+                "To create advertisements for the company",
+                "To replace financial reports",
+                "To summarize a company's information for the public",
+              ],
+              answer: 3,
+              exp: "A business profile provides a summary of key company information for public communication.",
+            },
+            {
+              q: "What additional item does the person offer to provide for contact details?",
+              options: [
+                "A letter",
+                "A brochure",
+                "A printed resume",
+                "A business card",
+              ],
+              answer: 3,
+              exp: "The person offers to give a business card containing all their contact details.",
+            },
+            {
+              q: "Which piece of contact information is NOT explicitly provided in the contacting information?",
+              options: [
+                "Email address",
+                "Phone number",
+                "Mailing address",
+                "Social media usernames for Twitter and Facebook",
+              ],
+              answer: 3,
+              exp: "The examples mention social media profiles like Twitter and Facebook but do not provide specific usernames.",
+            },
+            {
+              q: "What does Baker's concept of equivalence at the word level refer to?",
+              options: [
+                "The translation of individual words and their meanings",
+                "The cohesion between sentences in a text",
+                "The overall message conveyed in the source and target texts",
+                "The grammatical structures used in the source and target languages",
+              ],
+              answer: 0,
+              exp: "Baker discusses equivalence at the word level as relating to the direct translation of individual words.",
+            },
+            {
+              q: "According to Jakobson’s theory, which type of equivalence occurs within one language and involves rewording or paraphrase?",
+              options: [
+                "Lexical equivalence",
+                "Intersemiotic equivalence",
+                "Interlingual equivalence",
+                "Intralingual equivalence",
+              ],
+              answer: 3,
+              exp: "Intralingual equivalence refers to the process of rewording or paraphrasing within the same language.",
+            },
+            {
+              q: "Which of the following is NOT listed as a way to contact the person?",
+              options: [
+                "Email",
+                "Social media",
+                "Physical office visit",
+                "Phone number",
+              ],
+              answer: 2,
+              exp: "The examples do not mention a physical office address or the option of visiting in person.",
+            },
+            {
+              q: "What is the preferred contact method mentioned in the contacting information?",
+              options: [
+                "Phone call",
+                "Email",
+                "Social media",
+                "LinkedIn message",
+              ],
+              answer: 1,
+              exp: "The preferred contact method stated in the examples is via email.",
+            },
+            {
+              q: "What does the professional website showcase?",
+              options: [
+                "Personal blog posts",
+                "Social media links",
+                "Photography portfolio",
+                "Translation work",
+              ],
+              answer: 3,
+              exp: "The professional website is specifically mentioned as showcasing translation work.",
+            },
           ],
-          correctIndex: 2,
-          explanation:
-            "A 'non-lexicalised concept' occurs when a target language expresses a concept, but does not have a specific single word or lexical item for it.",
         },
         {
-          id: 3,
-          question:
-            "How are faithfulness and transparency related in translation?",
-          options: [
-            "They can be achieved together, but often involve a balance.",
-            "They are always mutually exclusive.",
-            "They are independent of each other.",
-            "They always lead to word-for-word translation.",
+          id: "pt3",
+          title: "Practice Test 3",
+          questions: [
+            {
+              q: "How does Pym (1992) describe the relationship between equivalence and translation?",
+              options: [
+                "They are unrelated concepts",
+                "Equivalence defines translation, and translation defines equivalence",
+                "Translation is a subset of equivalence",
+                "They are mutually exclusive concepts",
+              ],
+              answer: 1,
+              exp: "Pym points out a circular relationship where equivalence is used to define translation, while translation informs the understanding of equivalence.",
+            },
+            {
+              q: "What is the primary focus of formal equivalence according to Nida (1964)?",
+              options: [
+                "Achieving a close match of form and content between source and target languages",
+                "The grammatical accuracy of the translation",
+                "The cultural adaptation of the target text",
+                "The emotional impact of the translation on the target audience",
+              ],
+              answer: 0,
+              exp: "Formal equivalence emphasizes creating a direct correlation in form and content between the source and target texts.",
+            },
+            {
+              q: "What aspect of conversation can differ significantly between cultures?",
+              options: [
+                "The type of food served",
+                "The number of participants in a conversation",
+                "The color of clothing worn",
+                "The rules regarding silence and interruptions",
+              ],
+              answer: 3,
+              exp: "Different cultures have varying rules regarding silence and whether it is acceptable to interrupt others.",
+            },
+            {
+              q: "In France, how is punctuality typically viewed for business meetings?",
+              options: [
+                "Being 5 minutes late is generally acceptable",
+                "Arriving exactly on time is crucial",
+                "Arriving 15-30 minutes late is expected",
+                "Meetings always start at the scheduled time",
+              ],
+              answer: 0,
+              exp: "In France, being 5 minutes late to a business meeting is generally acceptable and not considered rude.",
+            },
+            {
+              q: "In an individualist society like the United States, how are employees typically viewed?",
+              options: [
+                "As independent entities with personal responsibility",
+                "As extensions of the company's goals",
+                "As part of strong groups that offer protection",
+                "As equal members of a collective team",
+              ],
+              answer: 0,
+              exp: "In individualist societies, employees are seen as independent individuals with personal accountabilities.",
+            },
+            {
+              q: "What might be a consequence of a literal, word-for-word translation?",
+              options: [
+                "Producing a natural and idiomatic text",
+                "Ensuring complete faithfulness to the original meaning",
+                "Achieving perfect transparency",
+                "Creating an unidiomatic translation that may sound awkward or nonsensical",
+              ],
+              answer: 3,
+              exp: "Literal translations often result in texts that sound awkward because they do not conform to TL norms.",
+            },
+            {
+              q: "What does Jakobson’s interlingual equivalence refer to?",
+              options: [
+                "Paraphrasing",
+                "Translation between languages",
+                "Symbolic conversion",
+                "Dialect transformation",
+              ],
+              answer: 1,
+              exp: "Interlingual equivalence means translating between two different languages.",
+            },
+            {
+              q: "How does the role of humour differ in various cultures?",
+              options: [
+                "It is always appropriate",
+                "It is used only in formal settings",
+                "It can be a good way to relax people or may be considered out of place",
+                "It is universally appreciated",
+              ],
+              answer: 2,
+              exp: "Humour can be effective in some cultures for relaxation, while in others it may be seen as inappropriate.",
+            },
+            {
+              q: "How do employees typically show deference in a high power–distance culture like France?",
+              options: [
+                "By avoiding any formal titles",
+                "By using first names",
+                "By participating equally in decision-making",
+                "By maintaining a respectful distance",
+              ],
+              answer: 3,
+              exp: "In high power-distance cultures like France, employees show respect by maintaining a respectful distance from managers.",
+            },
+            {
+              q: "How are managers viewed in a low power–distance culture like Sweden?",
+              options: [
+                "Distant and remote",
+                "Uninvolved in day-to-day tasks",
+                "Authoritative and strict",
+                "Accessible and approachable",
+              ],
+              answer: 3,
+              exp: "In low power-distance cultures like Sweden, managers are accessible and approachable.",
+            },
+            {
+              q: "In House’s theory, which translation is addressed directly to the target culture?",
+              options: ["Covert", "Literal", "Overt", "Intralingual"],
+              answer: 0,
+              exp: "Covert translation functions as if originally written for the target audience.",
+            },
+            {
+              q: "In what context might a translator deliberately produce a less transparent translation?",
+              options: [
+                "In technical documents to ensure accuracy",
+                "In literary or religious texts to maintain the source's original flavor",
+                "In scientific papers to avoid any ambiguity",
+                "In everyday conversations to simplify the message",
+              ],
+              answer: 1,
+              exp: "In literary and religious translations, a less transparent approach preserves original cultural elements.",
+            },
+            {
+              q: "In cross-cultural communication, what is one factor that can lead to misunderstandings?",
+              options: [
+                "The number of languages spoken",
+                "The distance people maintain while talking",
+                "The time of day for conversations",
+                "The amount of money spent on gifts",
+              ],
+              answer: 1,
+              exp: "Personal space during conversations varies across cultures and can lead to misunderstandings.",
+            },
+            {
+              q: "How does the role of humour differ in various cultures?",
+              options: [
+                "It is always appropriate",
+                "It is universally appreciated",
+                "It can be a good way to relax people or may be considered out of place",
+                "It is used only in formal settings",
+              ],
+              answer: 2,
+              exp: "Humour appropriateness varies significantly between background cultures.",
+            },
+            {
+              q: "In France, how is punctuality typically viewed for business meetings?",
+              options: [
+                "Arriving 15-30 minutes late is expected",
+                "Arriving exactly on time is crucial",
+                "Being 5 minutes late is generally acceptable",
+                "Meetings always start at the scheduled time",
+              ],
+              answer: 2,
+              exp: "Being 5 minutes late is socially acceptable in French business settings.",
+            },
           ],
-          correctIndex: 0,
-          explanation:
-            "Faithfulness (accuracy to source text) and transparency (naturalness in target language) can complement each other, though translators frequently balance between them.",
         },
         {
-          id: 4,
-          question:
-            "In what context might a translator deliberately produce a less transparent translation?",
-          options: [
-            "In technical documents to ensure accuracy",
-            "In literary or religious texts to maintain the source's original flavor",
-            "In scientific papers to avoid any ambiguity",
-            "In everyday conversations to simplify the message",
+          id: "pt4",
+          title: "Practice Test 4",
+          questions: [
+            {
+              q: "Which response acknowledges a point while introducing a broader perspective?",
+              options: [
+                "You're perfectly right. We are the people who are the driving force behind the company.",
+                "Exactly. It's the creative people who bring in all the money.",
+                "But on the other hand we mustn't forget the other benefits for the company.",
+                "Absolutely. It's the output that counts.",
+              ],
+              answer: 2,
+              exp: "This response recognizes the validity of the previous point but expands the discussion.",
+            },
+            {
+              q: "Which statement expresses a need for discipline regarding work hours?",
+              options: [
+                "I think you're wrong.",
+                "I'm sorry, but that's out of the question.",
+                "If the designers get to work late, they should be disciplined.",
+                "I don't really agree.",
+              ],
+              answer: 2,
+              exp: "This statement directly addresses punctuality, suggesting designers be held accountable.",
+            },
+            {
+              q: "What is an effective way to ensure you always have something to talk about?",
+              options: [
+                "Keep up with the latest news on a variety of topics",
+                "Avoid reading altogether",
+                "Only discuss work-related topics",
+                "Watch only one type of show",
+              ],
+              answer: 0,
+              exp: "Staying informed on various topics allows engagement in diverse conversations.",
+            },
+            {
+              q: "What should you do when someone shares information about themselves during a conversation?",
+              options: [
+                "Follow up with questions",
+                "Talk about yourself",
+                "Change the topic immediately",
+                "Ignore their comment",
+              ],
+              answer: 0,
+              exp: "Following up with questions shows interest and keeps the conversation going.",
+            },
+            {
+              q: "What is the primary purpose of a portable speaker during a presentation?",
+              options: [
+                "To display visual aids",
+                "To amplify sound for clarity",
+                "To provide lighting effects",
+                "To record the presentation",
+              ],
+              answer: 1,
+              exp: "A portable speaker amplifies sound to ensure everyone in the room hears clearly.",
+            },
+            {
+              q: "Which phrase best expresses strong agreement?",
+              options: [
+                "I couldn't agree more. We got our latest recruits after we won the Advertising Industry Award for best advertisement last year.",
+                "Precisely. Creativity comes to some of our people in the middle of the night.",
+                "That's true, I suppose. But we must think of the company as a whole.",
+                "I suppose so. But other employees mustn't be forgotten.",
+              ],
+              answer: 0,
+              exp: '"I couldn\'t agree more" indicates a strong level of agreement.',
+            },
+            {
+              q: "Which phrase expresses a moderate disagreement without being overly strong?",
+              options: [
+                "That's absurd. You can't expect us to leave at 10 in the evening and be back at 8 in the morning.",
+                "I think you're mistaken. If the designers get to work late, they should be disciplined.",
+                "I don't really agree. The prizes that the designers get are important, but people would come to work for us anyway.",
+                "I'm sorry, but that's out of the question. All employees should keep to normal working hours.",
+              ],
+              answer: 2,
+              exp: '"I don\'t really agree" indicates disagreement in a diplomatic manner.',
+            },
+            {
+              q: "What is the main function of HDMI cables in a presentation?",
+              options: [
+                "To control slides remotely",
+                "To connect devices like laptops to projectors",
+                "To write on whiteboards",
+                "To project images",
+              ],
+              answer: 1,
+              exp: "HDMI cables connect laptops to projectors or external screens.",
+            },
+            {
+              q: "What should you consider when thinking about conversation topics in different situations?",
+              options: [
+                "Only talk about yourself",
+                "Stick to topics that are controversial",
+                "The context and relevance to the event",
+                "Avoid asking any questions",
+              ],
+              answer: 2,
+              exp: "Considering context helps ask relevant questions and engage meaningfully.",
+            },
+            {
+              q: "What is the purpose of a wireless remote for presentations?",
+              options: [
+                "To control the presentation from a distance",
+                "To connect laptops to projectors",
+                "To display slides on a larger screen",
+                "To take notes during the presentation",
+              ],
+              answer: 0,
+              exp: "A wireless remote allows speakers to advance slides from a distance.",
+            },
+            {
+              q: "Which response suggests a stronger form of disagreement?",
+              options: [
+                "I think you're mistaken. If the designers get to work late, they should be disciplined.",
+                "I can't go along with you there. I think we need to see people at their desks actually working.",
+                "I'm sorry, but that's out of the question. All employees should keep to normal working hours.",
+                "I'm afraid I can't agree with you there. We all depend on each other for the company to make money.",
+              ],
+              answer: 2,
+              exp: "\"I'm sorry, but that's out of the question\" conveys a strong, definitive disagreement.",
+            },
+            {
+              q: "Which phrase indicates a disagreement while maintaining a polite tone?",
+              options: [
+                "That's absurd.",
+                "I can't go along with you there.",
+                "I think you're wrong.",
+                "That's really how I see it.",
+              ],
+              answer: 1,
+              exp: '"I can\'t go along with you there" expresses disagreement politely.',
+            },
+            {
+              q: "What is the primary rule for making small talk?",
+              options: [
+                "Use complex vocabulary",
+                "Make jokes frequently",
+                "Listen actively",
+                "Speak as much as possible",
+              ],
+              answer: 2,
+              exp: "Active listening is key to building rapport in small talk.",
+            },
+            {
+              q: "What should you consider when thinking about conversation topics in different situations?",
+              options: [
+                "The context and relevance to the event",
+                "Only talk about yourself",
+                "Avoid asking any questions",
+                "Stick to topics that are controversial",
+              ],
+              answer: 0,
+              exp: "Context and relevance determine appropriate small talk topics.",
+            },
+            {
+              q: "What is the purpose of a wireless remote for presentations?",
+              options: [
+                "To display slides on a larger screen",
+                "To connect laptops to projectors",
+                "To take notes during the presentation",
+                "To control the presentation from a distance",
+              ],
+              answer: 3,
+              exp: "Allows remote control of presentation slides.",
+            },
           ],
-          correctIndex: 1,
-          explanation:
-            "In literary or religious texts, a translator may deliberately retain foreign or archaic elements to preserve the historical atmosphere or artistic tone.",
         },
         {
-          id: 5,
-          question:
-            "Which technique is recommended for keeping a conversation going?",
-          options: [
-            "Avoiding eye contact",
-            "Talking about yourself",
-            "Asking closed questions",
-            "Asking open questions",
+          id: "mt1",
+          title: "Midterm Test - Part 1",
+          questions: [
+            {
+              q: "What is the focus of Nida’s dynamic equivalence?",
+              options: [
+                "Matching grammar rules",
+                "Preserving cultural terms",
+                "Following word order",
+                "Reproducing the original impact",
+              ],
+              answer: 3,
+              exp: "Dynamic equivalence focuses on creating an equivalent effect on target readers.",
+            },
+            {
+              q: "What is a disadvantage of using paraphrasing as a translation strategy?",
+              options: [
+                "It always requires cultural substitution",
+                "It often leads to translation by omission",
+                "It fails to convey expressive or evoked meaning",
+                "It does not achieve precision in meaning",
+              ],
+              answer: 2,
+              exp: "Paraphrasing may loss expressive nuances of the original word.",
+            },
+            {
+              q: "In House’s theory, which translation is addressed directly to the target culture?",
+              options: ["Literal", "Overt", "Covert", "Intralingual"],
+              answer: 2,
+              exp: "Covert translation operates smoothly in target culture as a original.",
+            },
+            {
+              q: "What is a characteristic of a faithful translation?",
+              options: [
+                "Renders meaning accurately",
+                "Adds cultural elements",
+                "Modifies the message for clarity",
+                "Uses domesticating strategies",
+              ],
+              answer: 0,
+              exp: "Faithful translation preserves meaning accurately.",
+            },
+            {
+              q: 'What does Catford define as "level shifts"?',
+              options: [
+                "Shifts in morphological or graphological aspects",
+                "Changes in cultural context",
+                "Differences in stylistic choices",
+                "Variations in sentence length",
+              ],
+              answer: 0,
+              exp: "Level shifts mean shifts between grammar and lexis/graphology.",
+            },
+            {
+              q: "What does pragmatic equivalence refer to in Baker’s approach?",
+              options: [
+                "The relationship between text and context",
+                "The grammatical alignment between source and target texts",
+                "Strategies of avoidance and the cultural implications of translation choices",
+                "The use of cohesive devices in translation",
+              ],
+              answer: 2,
+              exp: "Pragmatic equivalence deals with implied meanings and context.",
+            },
+            {
+              q: "Which type of non-equivalence occurs when a source language (SL) concept is entirely unfamiliar in the target culture?",
+              options: [
+                "Differences in form",
+                "Culture-specific concepts",
+                "The SL and TL make different distinctions in meaning",
+                "Differences in expressive meaning",
+              ],
+              answer: 1,
+              exp: "Culture-specific concepts refer to SL concepts totally unknown in TL culture.",
+            },
+            {
+              q: "Why is translation from a simple base recommended?",
+              options: [
+                "It reduces the length of the translation.",
+                "It allows more room for interpretation.",
+                "It helps improve the accuracy of the translation.",
+                "It simplifies cultural adaptation.",
+              ],
+              answer: 2,
+              exp: "A clear base ensures high accuracy in transferring core meaning.",
+            },
+            {
+              q: "What does grammatical equivalence focus on?",
+              options: [
+                "Cultural preservation",
+                "Expressive tone",
+                "Syntax consistency",
+                "Collocation differences",
+              ],
+              answer: 2,
+              exp: "Grammatical equivalence relates to structural/syntactic alignment.",
+            },
+            {
+              q: "What should you do when someone shares information about themselves during a conversation?",
+              options: [
+                "Ignore their comment",
+                "Change the topic immediately",
+                "Talk about yourself",
+                "Follow up with questions",
+              ],
+              answer: 3,
+              exp: "Asking follow-up questions shows engagement.",
+            },
+            {
+              q: "What is the primary rule for making small talk?",
+              options: [
+                "Use complex vocabulary",
+                "Listen actively",
+                "Speak as much as possible",
+                "Make jokes frequently",
+              ],
+              answer: 1,
+              exp: "Active listening builds rapport.",
+            },
+            {
+              q: "How do employees typically show deference in a high power–distance culture like France?",
+              options: [
+                "By participating equally in decision-making",
+                "By maintaining a respectful distance",
+                "By avoiding any formal titles",
+                "By using first names",
+              ],
+              answer: 1,
+              exp: "Maintaining distance shows respect in hierarchical structures.",
+            },
+            {
+              q: "What might be a consequence of a literal, word-for-word translation?",
+              options: [
+                "Achieving perfect transparency",
+                "Ensuring complete faithfulness to the original meaning",
+                "Creating an unidiomatic translation that may sound awkward or nonsensical",
+                "Producing a natural and idiomatic text",
+              ],
+              answer: 2,
+              exp: "Literal translation can cause awkwardness in TL.",
+            },
+            {
+              q: "The use of suffixes and prefixes that convey meaning in English but have no direct equivalents in other languages is an example of:",
+              options: [
+                "Differences in frequency of using specific forms",
+                "The TL lacks a superordinate",
+                "Differences in form",
+                "The SL concept is not lexicalized in the TL",
+              ],
+              answer: 2,
+              exp: "This represents morphological 'differences in form'.",
+            },
+            {
+              q: "Which of the following is NOT listed as a way to contact the person?",
+              options: [
+                "Social media",
+                "Email",
+                "Phone number",
+                "Physical office visit",
+              ],
+              answer: 3,
+              exp: "Physical office visit is not specified.",
+            },
+            {
+              q: "How should contextual factors be handled in translation?",
+              options: [
+                "They should dictate changes to the original meaning.",
+                "They should be ignored entirely to maintain fidelity to the text.",
+                "They should be used to justify omitting culturally irrelevant content.",
+                "They should be considered, but facts should remain unchanged.",
+              ],
+              answer: 3,
+              exp: "Context matters, but essential facts must remain unaltered.",
+            },
+            {
+              q: "What did Friedrich Schleiermacher believe about translation methods?",
+              options: [
+                "He supported making translations creative and original.",
+                "He preferred moving the reader towards the author by maintaining the source text's foreignness.",
+                "He favored transparency to make translations easier to read.",
+                "He advocated for domestication to promote cultural assimilation.",
+              ],
+              answer: 1,
+              exp: "Schleiermacher advocated foreignization (moving reader to author).",
+            },
+            {
+              q: "Which phrase best expresses strong agreement?",
+              options: [
+                "Precisely. Creativity comes to some of our people in the middle of the night.",
+                "I couldn't agree more. We got our latest recruits after we won the Advertising Industry Award for best advertisement last year.",
+                "That's true, I suppose. But we must think of the company as a whole.",
+                "I suppose so. But other employees mustn't be forgotten.",
+              ],
+              answer: 1,
+              exp: '"I couldn\'t agree more" = maximum agreement.',
+            },
+            {
+              q: "Why might a literary translator choose a non-transparent approach?",
+              options: [
+                "To reduce complexity",
+                "To speed up translation",
+                "To simplify syntax",
+                "To preserve foreignness",
+              ],
+              answer: 3,
+              exp: "Non-transparent/foreignized translation preserves original cultural flavor.",
+            },
+            {
+              q: "Which type of equivalence, according to Jakobson, refers to translation between two languages?",
+              options: [
+                "Interlingual equivalence",
+                "Intersemiotic equivalence",
+                "Phonetic equivalence",
+                "Intralingual equivalence",
+              ],
+              answer: 0,
+              exp: "Interlingual = translation proper across two languages.",
+            },
+            {
+              q: "How does the role of humour differ in various cultures?",
+              options: [
+                "It is universally appreciated",
+                "It is used only in formal settings",
+                "It is always appropriate",
+                "It can be a good way to relax people or may be considered out of place",
+              ],
+              answer: 3,
+              exp: "Humor acceptability varies drastically between societies.",
+            },
+            {
+              q: "What is the main advantage of using a loan word plus an explanation in translation?",
+              options: [
+                "It eliminates the need for cultural substitution",
+                "It reduces the word count in translation",
+                "It allows the translator to avoid complex paraphrasing",
+                "It helps in maintaining the original cultural reference while clarifying its meaning",
+              ],
+              answer: 3,
+              exp: "Maintains cultural specificity while providing clarity.",
+            },
+            {
+              q: "What is a main drawback of translation by paraphrase with unrelated words?",
+              options: [
+                "Adds loan words",
+                "Loses emotional meaning",
+                "Lacks clarity",
+                "Too brief",
+              ],
+              answer: 1,
+              exp: "Paraphrasing with non-cognate words can lose expressive or stylistic nuances.",
+            },
+            {
+              q: "Which response suggests a stronger form of disagreement?",
+              options: [
+                "I'm sorry, but that's out of the question. All employees should keep to normal working hours.",
+                "I'm afraid I can't agree with you there. We all depend on each other for the company to make money.",
+                "I think you're mistaken. If the designers get to work late, they should be disciplined.",
+                "I can't go along with you there. I think we need to see people at their desks actually working.",
+              ],
+              answer: 0,
+              exp: '"Out of the question" is an absolute rejection.',
+            },
+            {
+              q: "In France, how is punctuality typically viewed for business meetings?",
+              options: [
+                "Being 5 minutes late is generally acceptable",
+                "Arriving exactly on time is crucial",
+                "Arriving 15-30 minutes late is expected",
+                "Meetings always start at the scheduled time",
+              ],
+              answer: 0,
+              exp: "A 5-minute buffer is standard in French professional context.",
+            },
           ],
-          correctIndex: 3,
-          explanation:
-            "Asking open-ended questions encourages the other person to elaborate and expand on their answer, keeping the flow of dialogue active.",
         },
         {
-          id: 6,
-          question:
-            "How should idiomatic expressions be handled in translation according to these principles?",
-          options: [
-            "Omit them entirely to maintain clarity",
-            "Translate them word-for-word to preserve form",
-            "Use formal vocabulary instead",
-            "Adapt them to the target language to convey the intended meaning",
+          id: "mt2",
+          title: "Midterm Test - Part 2",
+          questions: [
+            {
+              q: "Why might a translator choose to omit a word or expression during translation?",
+              options: [
+                "To use a loan word in its place",
+                "When the term is not essential to the text's development",
+                "When the term does not have a cultural equivalent",
+                "To make the text longer and more complex",
+              ],
+              answer: 1,
+              exp: "Omission is used when the word's meaning is redundant or not vital to text development.",
+            },
+            {
+              q: "Which type of non-equivalence arises when a concept exists in the source culture but has no direct word in the target language?",
+              options: [
+                "Semantic complexity",
+                "Perspective difference",
+                "Non-lexicalised concept",
+                "Culture-specific concept",
+              ],
+              answer: 2,
+              exp: "Non-lexicalised concept means the concept is known, but no single word represents it in TL.",
+            },
+            {
+              q: "How are faithfulness and transparency related in translation?",
+              options: [
+                "They can be achieved together, but often involve a balance.",
+                "They are always mutually exclusive.",
+                "They are independent of each other.",
+                "They always lead to word-for-word translation.",
+              ],
+              answer: 0,
+              exp: "Translators continually balance preserving source details vs target naturalness.",
+            },
+            {
+              q: "In what context might a translator deliberately produce a less transparent translation?",
+              options: [
+                "In technical documents to ensure accuracy",
+                "In literary or religious texts to maintain the source's original flavor",
+                "In scientific papers to avoid any ambiguity",
+                "In everyday conversations to simplify the message",
+              ],
+              answer: 1,
+              exp: "Literary/religious texts often retain original foreign structures and style.",
+            },
+            {
+              q: "Which technique is recommended for keeping a conversation going?",
+              options: [
+                "Avoiding eye contact",
+                "Talking about yourself",
+                "Asking closed questions",
+                "Asking open questions",
+              ],
+              answer: 3,
+              exp: "Open-ended questions encourage elaboration.",
+            },
+            {
+              q: "How should idiomatic expressions be handled in translation according to these principles?",
+              options: [
+                "Omit them entirely to maintain clarity",
+                "Translate them word-for-word to preserve form",
+                "Use formal vocabulary instead",
+                "Adapt them to the target language to convey the intended meaning",
+              ],
+              answer: 3,
+              exp: "Idioms need adaptation to convey equivalent functional meaning.",
+            },
+            {
+              q: "What is the main goal of covert translation, as defined by House?",
+              options: [
+                "To produce a text that is functionally equivalent to the source text without addressing the target culture audience",
+                "To create a translation that is easily recognizable as a translation",
+                "To adapt the original text to fit the cultural norms of the target audience",
+                "To ensure that the target text maintains the same grammatical structure as the source text",
+              ],
+              answer: 0,
+              exp: "Covert translation aims for functional equivalence without explicitly advertising itself as a foreign text.",
+            },
+            {
+              q: 'What does "faithfulness" in translation refer to?',
+              options: [
+                "Making the translation sound natural in the target language",
+                "Maintaining the original sentence structure exactly",
+                "Adapting the translation to fit the target culture",
+                "Accurately rendering the meaning of the source text without adding or subtracting from it",
+              ],
+              answer: 3,
+              exp: "Faithfulness is accurate transmission of original sense.",
+            },
+            {
+              q: "Which time period saw the most development in translation theory?",
+              options: [
+                "The second half of the 20th century",
+                "The 19th century",
+                "The first half of the 20th century",
+                "The 21st century",
+              ],
+              answer: 0,
+              exp: "Modern translation studies expanded rapidly in the late 20th century (1950s onwards).",
+            },
+            {
+              q: "Which statement best reflects the naturalness aspect of translation principles?",
+              options: [
+                "Translations should maintain the same sentence length as the original.",
+                "Translations should be easily understood by native speakers.",
+                "Translations should prioritize complex vocabulary.",
+                "Translations should replicate the original grammar exactly.",
+              ],
+              answer: 1,
+              exp: "Naturalness implies native-like fluency and comprehension.",
+            },
+            {
+              q: "What is an effective way to ensure you always have something to talk about?",
+              options: [
+                "Watch only one type of show",
+                "Avoid reading altogether",
+                "Only discuss work-related topics",
+                "Keep up with the latest news on a variety of topics",
+              ],
+              answer: 3,
+              exp: "Staying updated on news provides broad topic ideas.",
+            },
+            {
+              q: "Which piece of contact information is NOT explicitly provided in the contacting information?",
+              options: [
+                "Email address",
+                "Phone number",
+                "Social media usernames for Twitter and Facebook",
+                "Mailing address",
+              ],
+              answer: 2,
+              exp: "Bổ sung đáp án: Các thông tin được nêu nhưng không chứa tên tài khoản (usernames) cụ thể cho Twitter/Facebook.",
+            },
+            {
+              q: "What does the professional website showcase?",
+              options: [
+                "Photography portfolio",
+                "Translation work",
+                "Social media links",
+                "Personal blog posts",
+              ],
+              answer: 1,
+              exp: "Website showcases professional translation work.",
+            },
+            {
+              q: "How does translating by paraphrasing using a related word differ from paraphrasing using unrelated words?",
+              options: [
+                "It uses a word that has a similar meaning and form in the target language",
+                "It completely changes the meaning of the source term",
+                "It avoids the use of general terms or superordinates",
+                "It always involves cultural substitution",
+              ],
+              answer: 0,
+              exp: "Uses words sharing semantic and formal links.",
+            },
+            {
+              q: "Which type of equivalence involves translating a text with a specific readership in mind to achieve a particular effect?",
+              options: [
+                "Pragmatic equivalence",
+                "Denotative equivalence",
+                "Formal equivalence",
+                "Text-normative equivalence",
+              ],
+              answer: 0,
+              exp: "Pragmatic equivalence focuses on reader response and effect.",
+            },
+            {
+              q: "Which of the following is the primary goal when translating according to the principles mentioned?",
+              options: [
+                "Translating idioms word-for-word",
+                "Preserving the original word order",
+                "Prioritizing formal structure over meaning",
+                "Achieving accuracy, naturalness, and clarity",
+              ],
+              answer: 3,
+              exp: "Core principles: Accuracy, Naturalness, Clarity.",
+            },
+            {
+              q: "According to Jakobson’s theory, which type of equivalence occurs within one language and involves rewording or paraphrase?",
+              options: [
+                "Intralingual equivalence",
+                "Interlingual equivalence",
+                "Lexical equivalence",
+                "Intersemiotic equivalence",
+              ],
+              answer: 0,
+              exp: "Intralingual = rewording inside same language.",
+            },
+            {
+              q: "Which phrase expresses a moderate disagreement without being overly strong?",
+              options: [
+                "I don't really agree. The prizes that the designers get are important, but people would come to work for us anyway.",
+                "That's absurd. You can't expect us to leave at 10 in the evening and be back at 8 in the morning.",
+                "I think you're mistaken. If the designers get to work late, they should be disciplined.",
+                "I'm sorry, but that's out of the question. All employees should keep to normal working hours.",
+              ],
+              answer: 0,
+              exp: '"I don\'t really agree..." expresses diplomatic moderate disagreement.',
+            },
+            {
+              q: "When is the strategy of using a more neutral or less expressive word applied?",
+              options: [
+                "When the source term has no direct equivalent in the target language",
+                "When translating modern concepts and buzzwords",
+                "When dealing with culture-specific items",
+                "When the source term is too emotionally loaded for the target audience",
+              ],
+              answer: 3,
+              exp: "Neutralizing tones avoids inappropriate emotional weight.",
+            },
+            {
+              q: "Which of the following is a key difference between formal equivalence and dynamic equivalence?",
+              options: [
+                "Formal equivalence focuses on word meaning, dynamic equivalence on cultural adaptation",
+                "Formal equivalence changes form, dynamic equivalence preserves it",
+                "Formal equivalence seeks equivalent effect, dynamic equivalence is literal",
+                "Formal equivalence maintains structure, dynamic equivalence preserves audience experience",
+              ],
+              answer: 3,
+              exp: "Formal keeps form/structure; Dynamic keeps recipient experience.",
+            },
+            {
+              q: "Which strategy involves leaving out a word or expression that is not vital for the overall meaning?",
+              options: [
+                "Translation by paraphrase using related words",
+                "Translation using a loan word",
+                "Translation by omission",
+                "Translation by cultural substitution",
+              ],
+              answer: 2,
+              exp: "Omission strategy removes non-essential terms.",
+            },
+            {
+              q: "Which strategy is commonly used for dealing with non-equivalence by translating a term with a broader meaning?",
+              options: [
+                "Translation by omission",
+                "Translation by cultural substitution",
+                "Translation by a more general word",
+                "Translation using a loan word",
+              ],
+              answer: 2,
+              exp: "Using a general word (superordinate) broadens the concept.",
+            },
+            {
+              q: "According to Catford, what are the two main factors affecting translation equivalence?",
+              options: [
+                "Linguistic and cultural factors",
+                "Text type and audience",
+                "Style and tone",
+                "Syntax and semantics",
+              ],
+              answer: 0,
+              exp: "Linguistic & Cultural factors dictate Catford's framework.",
+            },
+            {
+              q: "What aspect of conversation can differ significantly between cultures?",
+              options: [
+                "The number of participants in a conversation",
+                "The type of food served",
+                "The color of clothing worn",
+                "The rules regarding silence and interruptions",
+              ],
+              answer: 3,
+              exp: "Rules for silence and turn-taking differ widely.",
+            },
+            {
+              q: "Which of the following best explains the concept of equivalence in translation?",
+              options: [
+                "The notion that translation only focuses on word-for-word translation",
+                "The theory that translation does not need to consider the original text",
+                "The idea that translation should be creative and free from the source text",
+                "The concept that translation must maintain meaning and structure from the source language to the target language",
+              ],
+              answer: 3,
+              exp: "Equivalence balances preservation of core meaning and textual structure.",
+            },
           ],
-          correctIndex: 3,
-          explanation:
-            "Idioms rarely translate literally; adapting them into natural target-language idioms ensures the intended nuance and figurative meaning are preserved.",
-        },
-        {
-          id: 7,
-          question:
-            "What is the main goal of covert translation, as defined by House?",
-          options: [
-            "To produce a text that is functionally equivalent to the source text without addressing the target culture audience",
-            "To create a translation that is easily recognizable as a translation",
-            "To adapt the original text to fit the cultural norms of the target audience",
-            "To ensure that the target text maintains the same grammatical structure as the source text",
-          ],
-          correctIndex: 0,
-          explanation:
-            "According to Juliane House, a covert translation enjoys the status of an original source text in the target culture, functioning equivalently without drawing attention to its status as a translation.",
-        },
-        {
-          id: 8,
-          question: "What does 'faithfulness' in translation refer to?",
-          options: [
-            "Making the translation sound natural in the target language",
-            "Maintaining the original sentence structure exactly",
-            "Adapting the translation to fit the target culture",
-            "Accurately rendering the meaning of the source text without adding or subtracting from it",
-          ],
-          correctIndex: 3,
-          explanation:
-            "Faithfulness refers to the fidelity of the translation—accurately transferring the true meaning of the source text without distortion, omission, or unauthorized addition.",
-        },
-        {
-          id: 9,
-          question:
-            "Which time period saw the most development in translation theory?",
-          options: [
-            "The second half of the 20th century",
-            "The 19th century",
-            "The first half of the 20th century",
-            "The 21st century",
-          ],
-          correctIndex: 0,
-          explanation:
-            "Modern translation studies emerged as an academic discipline primarily in the second half of the 20th century (pioneered by Nida, Catford, Toury, etc.).",
-        },
-        {
-          id: 10,
-          question:
-            "Which statement best reflects the naturalness aspect of translation principles?",
-          options: [
-            "Translations should maintain the same sentence length as the original.",
-            "Translations should be easily understood by native speakers.",
-            "Translations should prioritize complex vocabulary.",
-            "Translations should replicate the original grammar exactly.",
-          ],
-          correctIndex: 1,
-          explanation:
-            "Naturalness means that the target text sounds smooth, idiomatic, and easily comprehended by native speakers of the target language.",
-        },
-        {
-          id: 11,
-          question:
-            "What is an effective way to ensure you always have something to talk about?",
-          options: [
-            "Watch only one type of show",
-            "Avoid reading altogether",
-            "Only discuss work-related topics",
-            "Keep up with the latest news on a variety of topics",
-          ],
-          correctIndex: 3,
-          explanation:
-            "Staying informed about diverse topics and current events provides a broad range of subjects for conversation.",
-        },
-        {
-          id: 12,
-          question:
-            "Which piece of contact information is NOT explicitly provided in the contacting information?",
-          options: [
-            "Email address",
-            "Phone number",
-            "Social media usernames for Twitter and Facebook",
-            "Mailing address",
-          ],
-          correctIndex: 2,
-          isFilledNote: true,
-          explanation:
-            "In standard business contact listings, general social media profile URLs or specific individual usernames (e.g., Twitter/Facebook handles) are often omitted unless explicitly detailed.",
-        },
-        {
-          id: 13,
-          question: "What does the professional website showcase?",
-          options: [
-            "Photography portfolio",
-            "Translation work",
-            "Social media links",
-            "Personal blog posts",
-          ],
-          correctIndex: 1,
-          explanation:
-            "For professional translators, their primary website portfolio highlights translation experience, past projects, and domain specialization.",
-        },
-        {
-          id: 14,
-          question:
-            "How does translating by paraphrasing using a related word differ from paraphrasing using unrelated words?",
-          options: [
-            "It uses a word that has a similar meaning and form in the target language",
-            "It completely changes the meaning of the source term",
-            "It avoids the use of general terms or superordinates",
-            "It always involves cultural substitution",
-          ],
-          correctIndex: 0,
-          explanation:
-            "Paraphrasing with a related word leverages a target term that shares morphological or semantic roots/forms with the source term.",
-        },
-        {
-          id: 15,
-          question:
-            "Which type of equivalence involves translating a text with a specific readership in mind to achieve a particular effect?",
-          options: [
-            "Pragmatic equivalence",
-            "Denotative equivalence",
-            "Formal equivalence",
-            "Text-normative equivalence",
-          ],
-          correctIndex: 0,
-          explanation:
-            "Pragmatic equivalence focuses on the communicative context and user effect, ensuring the target audience receives the intended message/impact.",
-        },
-        {
-          id: 16,
-          question:
-            "Which of the following is the primary goal when translating according to the principles mentioned?",
-          options: [
-            "Translating idioms word-for-word",
-            "Preserving the original word order",
-            "Prioritizing formal structure over meaning",
-            "Achieving accuracy, naturalness, and clarity",
-          ],
-          correctIndex: 3,
-          explanation:
-            "The core triad of effective business translation is accuracy (faithfulness), naturalness (fluency), and clarity (readability).",
-        },
-        {
-          id: 17,
-          question:
-            "According to Jakobson’s theory, which type of equivalence occurs within one language and involves rewording or paraphrase?",
-          options: [
-            "Intralingual equivalence",
-            "Interlingual equivalence",
-            "Lexical equivalence",
-            "Intersemiotic equivalence",
-          ],
-          correctIndex: 0,
-          explanation:
-            "Roman Jakobson defined 'Intralingual translation' (or rewording) as an interpretation of verbal signs by means of other signs of the same language.",
-        },
-        {
-          id: 18,
-          question:
-            "Which phrase expresses a moderate disagreement without being overly strong?",
-          options: [
-            "I don't really agree. The prizes that the designers get are important, but people would come to work for us anyway.",
-            "That's absurd. You can't expect us to leave at 10 in the evening and be back at 8 in the morning.",
-            "I think you're mistaken. If the designers get to work late, they should be disciplined.",
-            "I'm sorry, but that's out of the question. All employees should keep to normal working hours.",
-          ],
-          correctIndex: 0,
-          explanation:
-            "'I don't really agree...' uses softening language ('really') to express polite, moderate disagreement in professional communication.",
-        },
-        {
-          id: 19,
-          question:
-            "When is the strategy of using a more neutral or less expressive word applied?",
-          options: [
-            "When the source term has no direct equivalent in the target language",
-            "When translating modern concepts and buzzwords",
-            "When dealing with culture-specific items",
-            "When the source term is too emotionally loaded for the target audience",
-          ],
-          correctIndex: 3,
-          explanation:
-            "Translators soften terms into neutral vocabulary when the original expression carries an emotive or expressive tone that might offend or misinform target readers.",
-        },
-        {
-          id: 20,
-          question:
-            "Which of the following is a key difference between formal equivalence and dynamic equivalence?",
-          options: [
-            "Formal equivalence focuses on word meaning, dynamic equivalence on cultural adaptation",
-            "Formal equivalence changes form, dynamic equivalence preserves it",
-            "Formal equivalence seeks equivalent effect, dynamic equivalence is literal",
-            "Formal equivalence maintains structure, dynamic equivalence preserves audience experience",
-          ],
-          correctIndex: 3,
-          explanation:
-            "Eugene Nida's Formal equivalence aims to preserve source text structure/form, whereas Dynamic equivalence seeks to evoke an equivalent reaction in the target audience.",
-        },
-        {
-          id: 21,
-          question:
-            "Which strategy involves leaving out a word or expression that is not vital for the overall meaning?",
-          options: [
-            "Translation by paraphrase using related words",
-            "Translation using a loan word",
-            "Translation by omission",
-            "Translation by cultural substitution",
-          ],
-          correctIndex: 2,
-          explanation:
-            "Translation by omission removes non-essential words to streamline text without compromising core meaning.",
-        },
-        {
-          id: 22,
-          question:
-            "Which strategy is commonly used for dealing with non-equivalence by translating a term with a broader meaning?",
-          options: [
-            "Translation by omission",
-            "Translation by cultural substitution",
-            "Translation by a more general word",
-            "Translation using a loan word",
-          ],
-          correctIndex: 2,
-          explanation:
-            "Translating using a superordinate or more general word (hypernym) is a frequent strategy when target languages lack specific subordinate terms.",
-        },
-        {
-          id: 23,
-          question:
-            "According to Catford, what are the two main factors affecting translation equivalence?",
-          options: [
-            "Linguistic and cultural factors",
-            "Text type and audience",
-            "Style and tone",
-            "Syntax and semantics",
-          ],
-          correctIndex: 0,
-          explanation:
-            "J.C. Catford highlighted linguistic factors (structural differences between SL and TL) and cultural factors (contextual applicability).",
-        },
-        {
-          id: 24,
-          question:
-            "What aspect of conversation can differ significantly between cultures?",
-          options: [
-            "The number of participants in a conversation",
-            "The type of food served",
-            "The color of clothing worn",
-            "The rules regarding silence and interruptions",
-          ],
-          correctIndex: 3,
-          explanation:
-            "Conversational norms regarding acceptable pause lengths, silence, and overlap/interruptions vary dramatically across global cultures.",
-        },
-        {
-          id: 25,
-          question:
-            "Which of the following best explains the concept of equivalence in translation?",
-          options: [
-            "The notion that translation only focuses on word-for-word translation",
-            "The theory that translation does not need to consider the original text",
-            "The idea that translation should be creative and free from the source text",
-            "The concept that translation must maintain meaning and structure from the source language to the target language",
-          ],
-          correctIndex: 3,
-          explanation:
-            "Translation equivalence entails conveying the source message's semantic meaning and functional structure accurately into the target language.",
         },
       ];
 
-      // State Management Variable
-      // userAnswers stores key: questionIndex (0 to 24), value: selectedOptionIndex (0 to 3)
-      let userAnswers = {};
+      // --- STATE MANAGEMENT ---
+      let currentTestIndex = 0;
       let currentQuestionIndex = 0;
-      let showExplanationOverride = {};
+      // userAnswers: { testId: { qIndex: selectedOptionIndex } }
+      let userAnswers = {};
+      // checkedStatus: { testId: { qIndex: boolean } }
+      let checkedStatus = {};
 
-      // DOM Element References
-      const questionTextEl = document.getElementById("question-text");
-      const questionBadgeEl = document.getElementById("question-badge");
-      const filledNoteBadgeEl = document.getElementById("filled-note-badge");
-      const optionsContainerEl = document.getElementById("options-container");
-      const explanationBoxEl = document.getElementById("explanation-box");
-      const explanationTextEl = document.getElementById("explanation-text");
-      const toggleExpTextEl = document.getElementById("toggle-exp-text");
-      const currentQuestionNumEl = document.getElementById(
-        "current-question-num",
-      );
-      const progressBarEl = document.getElementById("main-progress-bar");
-      const progressPercentEl = document.getElementById("progress-percent");
-      const headerCompletedCountEl = document.getElementById(
-        "header-completed-count",
-      );
-      const statAnsweredEl = document.getElementById("stat-answered");
-      const statCorrectEl = document.getElementById("stat-correct");
-      const navGridEl = document.getElementById("nav-grid");
-      const btnPrevEl = document.getElementById("btn-prev");
-      const btnNextEl = document.getElementById("btn-next");
+      // DOM ELEMENTS
+      const tabsContainer = document.getElementById("tabsContainer");
+      const currentTestTitle = document.getElementById("currentTestTitle");
+      const questionCounter = document.getElementById("questionCounter");
+      const scoreBadge = document.getElementById("scoreBadge");
+      const scoreText = document.getElementById("scoreText");
+      const questionGrid = document.getElementById("questionGrid");
+      const questionContent = document.getElementById("questionContent");
+      const optionsContainer = document.getElementById("optionsContainer");
+      const explanationBox = document.getElementById("explanationBox");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const checkBtn = document.getElementById("checkBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const questionAnchor = document.getElementById("questionAnchor");
 
-      window.addEventListener("DOMContentLoaded", () => {
-        renderNavGrid();
-        loadQuestion(0);
-        updateStats();
+      // --- DARK MODE LOGIC ---
+      function initTheme() {
+        if (
+          localStorage.theme === "dark" ||
+          (!("theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+          themeIcon.className = "fa-solid fa-sun";
+        } else {
+          document.documentElement.classList.remove("dark");
+          themeIcon.className = "fa-solid fa-moon";
+        }
+      }
+
+      themeToggle.addEventListener("click", () => {
+        if (document.documentElement.classList.contains("dark")) {
+          document.documentElement.classList.remove("dark");
+          localStorage.theme = "light";
+          themeIcon.className = "fa-solid fa-moon";
+        } else {
+          document.documentElement.classList.add("dark");
+          localStorage.theme = "dark";
+          themeIcon.className = "fa-solid fa-sun";
+        }
       });
 
-      // Render Navigation Grid (1 to 25)
-      function renderNavGrid() {
-        navGridEl.innerHTML = "";
-        questionsData.forEach((q, idx) => {
-          const btn = document.createElement("button");
-          btn.id = `nav-btn-${idx}`;
-          btn.className = `h-10 rounded-xl font-bold text-xs transition-all flex items-center justify-center border`;
-          btn.innerText = idx + 1;
-          btn.onclick = () => jumpToQuestion(idx);
-          navGridEl.appendChild(btn);
-        });
-        updateNavGridStyles();
+      // --- APP INITIALIZATION ---
+      function initApp() {
+        initTheme();
+        renderTabs();
+        loadTest(0);
       }
 
-      // Update Nav Grid Colors & States
-      function updateNavGridStyles() {
-        questionsData.forEach((q, idx) => {
-          const btn = document.getElementById(`nav-btn-${idx}`);
-          if (!btn) return;
-
-          const isCurrent = idx === currentQuestionIndex;
-          const isAnswered = userAnswers.hasOwnProperty(idx);
-          const userAnswer = userAnswers[idx];
-
-          // Base style resetting
-          btn.className = `h-10 rounded-xl font-bold text-xs transition-all flex items-center justify-center border `;
-
-          if (isCurrent) {
-            btn.classList.add("ring-2", "ring-sky-500", "ring-offset-2");
-          }
-
-          if (isAnswered) {
-            if (userAnswer === q.correctIndex) {
-              btn.classList.add(
-                "bg-emerald-500",
-                "text-white",
-                "border-emerald-600",
-              );
-            } else {
-              btn.classList.add("bg-rose-500", "text-white", "border-rose-600");
+      // RENDER TABS MÃ ĐỀ
+      function renderTabs() {
+        tabsContainer.innerHTML = "";
+        ALL_TESTS.forEach((test, idx) => {
+          const button = document.createElement("button");
+          button.className = `px-3.5 py-2 rounded-lg whitespace-nowrap font-medium transition-all text-xs md:text-sm ${
+            idx === currentTestIndex
+              ? "bg-brand-600 text-white shadow-sm"
+              : "bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600"
+          }`;
+          button.textContent = test.title;
+          button.addEventListener("click", () => {
+            if (currentTestIndex !== idx) {
+              currentTestIndex = idx;
+              currentQuestionIndex = 0;
+              renderTabs();
+              loadTest(currentTestIndex);
+              scrollToQuestion();
             }
-          } else {
-            btn.classList.add(
-              "bg-slate-100",
-              "hover:bg-slate-200",
-              "text-slate-700",
-              "border-slate-200",
-            );
-          }
+          });
+          tabsContainer.appendChild(button);
         });
       }
 
-      function loadQuestion(index) {
-        currentQuestionIndex = index;
-        const q = questionsData[index];
+      // SCROLL LÊN ĐẦU CÂU HỎI (HỖ TRỢ ĐIỆN THOẠI)
+      function scrollToQuestion() {
+        questionAnchor.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
 
-        // Update Titles & Labels
-        currentQuestionNumEl.innerText = index + 1;
-        questionBadgeEl.innerText = `Câu hỏi ${index + 1}`;
-        questionTextEl.innerText = q.question;
-
-        // Handle Filled Note (Câu 12)
-        if (q.isFilledNote) {
-          filledNoteBadgeEl.classList.remove("hidden");
-        } else {
-          filledNoteBadgeEl.classList.add("hidden");
+      // LOAD MỘT ĐỀ THI
+      function loadTest(testIdx) {
+        const test = ALL_TESTS[testIdx];
+        if (!userAnswers[test.id]) {
+          userAnswers[test.id] = {};
+        }
+        if (!checkedStatus[test.id]) {
+          checkedStatus[test.id] = {};
         }
 
-        // Render Options
-        optionsContainerEl.innerHTML = "";
-        const hasAnswered = userAnswers.hasOwnProperty(index);
-        const selectedOpt = userAnswers[index];
+        currentTestTitle.textContent = test.title;
+        renderQuestionGrid();
+        renderQuestion();
+        updateScoreBadge();
+      }
+
+      // RENDER PALETTE CÂU HỎI (1, 2, 3...)
+      function renderQuestionGrid() {
+        questionGrid.innerHTML = "";
+        const test = ALL_TESTS[currentTestIndex];
+
+        test.questions.forEach((_, idx) => {
+          const btn = document.createElement("button");
+          const isSelected = idx === currentQuestionIndex;
+          const userAns = userAnswers[test.id][idx];
+          const isChecked = checkedStatus[test.id][idx];
+
+          let bgClasses =
+            "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600";
+
+          if (isChecked) {
+            const isCorrect = userAns === test.questions[idx].answer;
+            bgClasses = isCorrect
+              ? "bg-emerald-500 text-white border-emerald-600"
+              : "bg-rose-500 text-white border-rose-600";
+          } else if (userAns !== undefined) {
+            bgClasses =
+              "bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 border-brand-300 dark:border-brand-700 font-semibold";
+          }
+
+          if (isSelected) {
+            bgClasses +=
+              " ring-2 ring-brand-500 ring-offset-2 dark:ring-offset-slate-800";
+          }
+
+          btn.className = `w-8 h-8 md:w-9 md:h-9 text-xs rounded-lg border flex items-center justify-center transition ${bgClasses}`;
+          btn.textContent = idx + 1;
+          btn.addEventListener("click", () => {
+            currentQuestionIndex = idx;
+            renderQuestionGrid();
+            renderQuestion();
+            scrollToQuestion();
+          });
+          questionGrid.appendChild(btn);
+        });
+      }
+
+      // RENDER NỘI DUNG CÂU HỎI HIỆN TẠI
+      function renderQuestion() {
+        const test = ALL_TESTS[currentTestIndex];
+        const q = test.questions[currentQuestionIndex];
+        const testId = test.id;
+        const savedAns = userAnswers[testId][currentQuestionIndex];
+        const isChecked = checkedStatus[testId][currentQuestionIndex];
+
+        // Counter
+        questionCounter.textContent = `Câu ${currentQuestionIndex + 1} / ${test.questions.length}`;
+
+        // Title
+        questionContent.innerHTML = `<span class="text-brand-600 dark:text-brand-400 font-bold mr-1">Câu ${currentQuestionIndex + 1}:</span> ${q.q}`;
+
+        // Options
+        optionsContainer.innerHTML = "";
+        const labels = ["A", "B", "C", "D"];
 
         q.options.forEach((optText, optIdx) => {
-          const optCard = document.createElement("div");
+          const optionDiv = document.createElement("div");
+          const isUserSelected = savedAns === optIdx;
+          const isCorrectOpt = optIdx === q.answer;
 
-          let cardClass =
-            "option-card border rounded-xl p-4 flex items-center justify-between cursor-pointer select-none text-sm font-medium ";
-          let iconHtml = "";
+          let stateClasses =
+            "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200";
 
-          if (hasAnswered) {
-            optCard.classList.add("disabled");
-            if (optIdx === q.correctIndex) {
-              // Correct Answer Style
-              cardClass +=
-                "bg-emerald-50 border-emerald-300 text-emerald-900 font-semibold ";
-              iconHtml =
-                '<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>';
-            } else if (optIdx === selectedOpt) {
-              // User Selected Wrong Answer
-              cardClass +=
-                "bg-rose-50 border-rose-300 text-rose-900 font-semibold ";
-              iconHtml =
-                '<i class="fa-solid fa-circle-xmark text-rose-500 text-lg"></i>';
+          if (isChecked) {
+            if (isCorrectOpt) {
+              stateClasses =
+                "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-200 font-medium";
+            } else if (isUserSelected && !isCorrectOpt) {
+              stateClasses =
+                "border-rose-500 bg-rose-50 dark:bg-rose-950/30 text-rose-900 dark:text-rose-200 font-medium";
+            }
+          } else if (isUserSelected) {
+            stateClasses =
+              "border-brand-500 bg-brand-50 dark:bg-brand-950/30 text-brand-900 dark:text-brand-200 font-medium ring-1 ring-brand-500";
+          }
+
+          optionDiv.className = `p-3.5 rounded-xl border transition cursor-pointer flex items-start gap-3 ${stateClasses}`;
+
+          let statusIcon = "";
+          if (isChecked) {
+            if (isCorrectOpt) {
+              statusIcon = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 mt-0.5"></i>`;
+            } else if (isUserSelected && !isCorrectOpt) {
+              statusIcon = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 mt-0.5"></i>`;
             } else {
-              // Unselected Options when answered
-              cardClass +=
-                "bg-slate-50/50 border-slate-200 text-slate-400 opacity-60 ";
+              statusIcon = `<div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600 mt-0.5"></div>`;
             }
           } else {
-            // Not answered state
-            cardClass +=
-              "bg-white border-slate-200 hover:border-sky-300 hover:bg-sky-50/50 text-slate-700 ";
+            statusIcon = isUserSelected
+              ? `<i class="fa-solid fa-circle-dot text-brand-600 dark:text-brand-400 mt-0.5"></i>`
+              : `<div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600 mt-0.5"></div>`;
           }
 
-          optCard.className = cardClass;
-
-          // Option Prefix (A, B, C, D)
-          const letter = String.fromCharCode(65 + optIdx);
-
-          optCard.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${
-                          hasAnswered && optIdx === q.correctIndex
-                            ? "bg-emerald-200 text-emerald-800"
-                            : hasAnswered && optIdx === selectedOpt
-                              ? "bg-rose-200 text-rose-800"
-                              : "bg-slate-100 text-slate-600"
-                        }">${letter}</span>
-                        <span>${optText}</span>
+          optionDiv.innerHTML = `
+                    ${statusIcon}
+                    <div class="flex-1 text-sm md:text-base leading-snug">
+                        <span class="font-bold mr-1">${labels[optIdx]}.</span> ${optText}
                     </div>
-                    <div>${iconHtml}</div>
                 `;
 
-          if (!hasAnswered) {
-            optCard.onclick = () => selectOption(index, optIdx);
+          if (!isChecked) {
+            optionDiv.addEventListener("click", () => {
+              userAnswers[testId][currentQuestionIndex] = optIdx;
+              renderQuestionGrid();
+              renderQuestion();
+            });
           }
 
-          optionsContainerEl.appendChild(optCard);
+          optionsContainer.appendChild(optionDiv);
         });
 
-        // Handle Explanation Visibility
-        explanationTextEl.innerText = q.explanation;
-        if (hasAnswered || showExplanationOverride[index]) {
-          explanationBoxEl.classList.remove("hidden");
-          toggleExpTextEl.innerText = "Ẩn giải thích";
+        // Feedback & Explanation
+        if (isChecked) {
+          explanationBox.classList.remove("hidden");
+          const isCorrect = savedAns === q.answer;
+          if (isCorrect) {
+            explanationBox.className =
+              "mt-6 p-4 rounded-xl border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-sm";
+            explanationBox.innerHTML = `
+                        <div class="font-bold text-emerald-700 dark:text-emerald-400 mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-check"></i> Chính xác!
+                        </div>
+                        <div>${q.exp}</div>
+                    `;
+          } else {
+            explanationBox.className =
+              "mt-6 p-4 rounded-xl border border-rose-300 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 text-sm";
+            explanationBox.innerHTML = `
+                        <div class="font-bold text-rose-700 dark:text-rose-400 mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-xmark"></i> Chưa đúng!
+                        </div>
+                        <div class="mb-1"><strong>Đáp án đúng:</strong> ${labels[q.answer]}. ${q.options[q.answer]}</div>
+                        <div><strong>Giải thích:</strong> ${q.exp}</div>
+                    `;
+          }
         } else {
-          explanationBoxEl.classList.add("hidden");
-          toggleExpTextEl.innerText = "Xem giải thích";
+          explanationBox.classList.add("hidden");
         }
 
-        // Update Prev/Next Buttons
-        btnPrevEl.disabled = index === 0;
-        btnNextEl.disabled = index === questionsData.length - 1;
+        // Controls update
+        prevBtn.disabled = currentQuestionIndex === 0;
+        nextBtn.disabled = currentQuestionIndex === test.questions.length - 1;
 
-        updateNavGridStyles();
-      }
-
-      function selectOption(qIdx, optIdx) {
-        userAnswers[qIdx] = optIdx;
-        updateStats();
-        loadQuestion(qIdx);
-      }
-
-      function toggleExplanation() {
-        const isHidden = explanationBoxEl.classList.contains("hidden");
-        if (isHidden) {
-          explanationBoxEl.classList.remove("hidden");
-          toggleExpTextEl.innerText = "Ẩn giải thích";
-          showExplanationOverride[currentQuestionIndex] = true;
+        checkBtn.disabled = savedAns === undefined;
+        if (savedAns === undefined) {
+          checkBtn.classList.add("opacity-50", "cursor-not-allowed");
         } else {
-          explanationBoxEl.classList.add("hidden");
-          toggleExpTextEl.innerText = "Xem giải thích";
-          showExplanationOverride[currentQuestionIndex] = false;
+          checkBtn.classList.remove("opacity-50", "cursor-not-allowed");
         }
       }
 
-      function nextQuestion() {
-        if (currentQuestionIndex < questionsData.length - 1) {
-          loadQuestion(currentQuestionIndex + 1);
+      // TÍNH ĐIỂM
+      function updateScoreBadge() {
+        const test = ALL_TESTS[currentTestIndex];
+        const testId = test.id;
+        const checkedKeys = Object.keys(checkedStatus[testId] || {}).filter(
+          (k) => checkedStatus[testId][k],
+        );
+
+        if (checkedKeys.length > 0) {
+          let correctCount = 0;
+          checkedKeys.forEach((k) => {
+            if (userAnswers[testId][k] === test.questions[k].answer) {
+              correctCount++;
+            }
+          });
+          scoreText.textContent = `${correctCount}/${test.questions.length}`;
+          scoreBadge.classList.remove("hidden");
+        } else {
+          scoreBadge.classList.add("hidden");
         }
       }
 
-      function prevQuestion() {
+      // EVEN LISTENERS CHO BUTTONS
+      prevBtn.addEventListener("click", () => {
         if (currentQuestionIndex > 0) {
-          loadQuestion(currentQuestionIndex - 1);
+          currentQuestionIndex--;
+          renderQuestionGrid();
+          renderQuestion();
+          scrollToQuestion();
         }
-      }
+      });
 
-      function jumpToQuestion(index) {
-        loadQuestion(index);
-      }
+      nextBtn.addEventListener("click", () => {
+        const test = ALL_TESTS[currentTestIndex];
+        if (currentQuestionIndex < test.questions.length - 1) {
+          currentQuestionIndex++;
+          renderQuestionGrid();
+          renderQuestion();
+          scrollToQuestion();
+        }
+      });
 
-      // Update Statistics Counters & Progress Bar
-      function updateStats() {
-        const answeredCount = Object.keys(userAnswers).length;
-        let correctCount = 0;
+      checkBtn.addEventListener("click", () => {
+        const test = ALL_TESTS[currentTestIndex];
+        const testId = test.id;
+        if (userAnswers[testId][currentQuestionIndex] !== undefined) {
+          checkedStatus[testId][currentQuestionIndex] = true;
+          renderQuestionGrid();
+          renderQuestion();
+          updateScoreBadge();
+        }
+      });
 
-        Object.keys(userAnswers).forEach((qIdx) => {
-          if (userAnswers[qIdx] === questionsData[qIdx].correctIndex) {
-            correctCount++;
-          }
-        });
-
-        const percent = Math.round(
-          (answeredCount / questionsData.length) * 100,
-        );
-
-        // Update Left/Right Panel Stats
-        statAnsweredEl.innerText = `${answeredCount}/25`;
-        statCorrectEl.innerText = correctCount;
-        headerCompletedCountEl.innerText = answeredCount;
-
-        // Update Progress Bar
-        progressBarEl.style.width = `${percent}%`;
-        progressPercentEl.innerText = `${percent}% Hoàn thành`;
-      }
-
-      // Reset Quiz
-      function resetQuiz() {
+      resetBtn.addEventListener("click", () => {
         if (
-          Object.keys(userAnswers).length > 0 &&
-          !confirm("Bạn có chắc chắn muốn làm lại bài từ đầu không?")
+          confirm("Bạn có chắc chắn muốn xóa hết lựa chọn và làm lại đề này?")
         ) {
-          return;
+          const testId = ALL_TESTS[currentTestIndex].id;
+          userAnswers[testId] = {};
+          checkedStatus[testId] = {};
+          currentQuestionIndex = 0;
+          renderQuestionGrid();
+          renderQuestion();
+          updateScoreBadge();
+          scrollToQuestion();
         }
-        userAnswers = {};
-        showExplanationOverride = {};
-        currentQuestionIndex = 0;
-        updateStats();
-        renderNavGrid();
-        loadQuestion(0);
-      }
+      });
 
-      // Finish Quiz & Show Modal
-      function finishQuiz() {
-        const answeredCount = Object.keys(userAnswers).length;
-        if (answeredCount < questionsData.length) {
-          if (
-            !confirm(
-              `Bạn mới làm ${answeredCount}/25 câu. Bạn có chắc chắn muốn xem tổng kết không?`,
-            )
-          ) {
-            return;
-          }
-        }
-
-        let correctCount = 0;
-        Object.keys(userAnswers).forEach((qIdx) => {
-          if (userAnswers[qIdx] === questionsData[qIdx].correctIndex) {
-            correctCount++;
-          }
-        });
-
-        const accuracy = Math.round(
-          (correctCount / questionsData.length) * 100,
-        );
-
-        document.getElementById("modal-score-percent").innerText =
-          `${accuracy}%`;
-        document.getElementById("modal-correct-count").innerText = correctCount;
-
-        document.getElementById("result-modal").classList.remove("hidden");
-      }
-
-      function closeModal() {
-        document.getElementById("result-modal").classList.add("hidden");
-      }
+      // CHẠY ỨNG DỤNG
+      document.addEventListener("DOMContentLoaded", initApp);
     </script>
   </body>
 </html>
