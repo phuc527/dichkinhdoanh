@@ -14,9 +14,13 @@
               brand: {
                 50: "#eff6ff",
                 100: "#dbeafe",
+                300: "#93c5fd",
+                400: "#60a5fa",
                 500: "#3b82f6",
                 600: "#2563eb",
                 700: "#1d4ed8",
+                900: "#1e3a8a",
+                950: "#172554",
               },
             },
           },
@@ -54,7 +58,9 @@
         class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center"
       >
         <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-graduation-cap text-brand-600 text-2xl"></i>
+          <i
+            class="fa-solid fa-graduation-cap text-brand-600 dark:text-brand-400 text-2xl"
+          ></i>
           <h1
             class="font-bold text-lg md:text-xl text-slate-900 dark:text-white"
           >
@@ -118,7 +124,7 @@
           </div>
         </div>
 
-        <!-- DANH SÁCH SỐ CÂU HỎI (PAGINATION PALETTE) -->
+        <!-- DANH SÁCH SỐ CÂU HỎI -->
         <div
           class="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700"
         >
@@ -130,7 +136,6 @@
           </div>
         </div>
 
-        <!-- ANCHOR CHO SCROLL KHI SANG CÂU MỚI -->
         <div id="questionAnchor" class="scroll-mt-24"></div>
 
         <!-- QUESTION CARD -->
@@ -162,23 +167,15 @@
         <div class="flex justify-between items-center gap-3 pt-2">
           <button
             id="prevBtn"
-            class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2"
+            class="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2"
           >
             <i class="fa-solid fa-chevron-left"></i>
             <span>Trước</span>
           </button>
 
           <button
-            id="checkBtn"
-            class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium shadow-sm transition flex items-center gap-2"
-          >
-            <i class="fa-solid fa-check"></i>
-            <span>Kiểm tra</span>
-          </button>
-
-          <button
             id="nextBtn"
-            class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2"
+            class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2"
           >
             <span>Tiếp</span>
             <i class="fa-solid fa-chevron-right"></i>
@@ -187,16 +184,13 @@
       </div>
     </main>
 
-    <!-- FOOTER -->
     <footer
       class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-4 text-center text-xs text-slate-500 dark:text-slate-400 mt-8"
     >
       Môn học: Business Translation • Interactive Test App
     </footer>
 
-    <!-- JAVASCRIPT DATA & LOGIC -->
     <script>
-      // --- NGUỒN DỮ LIỆU ĐỀ THI TỪ FILE DOCX ---
       const ALL_TESTS = [
         {
           id: "pt1",
@@ -1374,9 +1368,7 @@
       // --- STATE MANAGEMENT ---
       let currentTestIndex = 0;
       let currentQuestionIndex = 0;
-      // userAnswers: { testId: { qIndex: selectedOptionIndex } }
       let userAnswers = {};
-      // checkedStatus: { testId: { qIndex: boolean } }
       let checkedStatus = {};
 
       // DOM ELEMENTS
@@ -1391,7 +1383,6 @@
       const explanationBox = document.getElementById("explanationBox");
       const prevBtn = document.getElementById("prevBtn");
       const nextBtn = document.getElementById("nextBtn");
-      const checkBtn = document.getElementById("checkBtn");
       const resetBtn = document.getElementById("resetBtn");
       const themeToggle = document.getElementById("themeToggle");
       const themeIcon = document.getElementById("themeIcon");
@@ -1431,7 +1422,7 @@
         loadTest(0);
       }
 
-      // RENDER TABS MÃ ĐỀ
+      // RENDER TABS
       function renderTabs() {
         tabsContainer.innerHTML = "";
         ALL_TESTS.forEach((test, idx) => {
@@ -1455,12 +1446,10 @@
         });
       }
 
-      // SCROLL LÊN ĐẦU CÂU HỎI (HỖ TRỢ ĐIỆN THOẠI)
       function scrollToQuestion() {
         questionAnchor.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
-      // LOAD MỘT ĐỀ THI
       function loadTest(testIdx) {
         const test = ALL_TESTS[testIdx];
         if (!userAnswers[test.id]) {
@@ -1476,7 +1465,6 @@
         updateScoreBadge();
       }
 
-      // RENDER PALETTE CÂU HỎI (1, 2, 3...)
       function renderQuestionGrid() {
         questionGrid.innerHTML = "";
         const test = ALL_TESTS[currentTestIndex];
@@ -1517,7 +1505,6 @@
         });
       }
 
-      // RENDER NỘI DUNG CÂU HỎI HIỆN TẠI
       function renderQuestion() {
         const test = ALL_TESTS[currentTestIndex];
         const q = test.questions[currentQuestionIndex];
@@ -1525,13 +1512,9 @@
         const savedAns = userAnswers[testId][currentQuestionIndex];
         const isChecked = checkedStatus[testId][currentQuestionIndex];
 
-        // Counter
         questionCounter.textContent = `Câu ${currentQuestionIndex + 1} / ${test.questions.length}`;
-
-        // Title
         questionContent.innerHTML = `<span class="text-brand-600 dark:text-brand-400 font-bold mr-1">Câu ${currentQuestionIndex + 1}:</span> ${q.q}`;
 
-        // Options
         optionsContainer.innerHTML = "";
         const labels = ["A", "B", "C", "D"];
 
@@ -1546,14 +1529,11 @@
           if (isChecked) {
             if (isCorrectOpt) {
               stateClasses =
-                "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-200 font-medium";
+                "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-100 font-medium";
             } else if (isUserSelected && !isCorrectOpt) {
               stateClasses =
-                "border-rose-500 bg-rose-50 dark:bg-rose-950/30 text-rose-900 dark:text-rose-200 font-medium";
+                "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-100 font-medium";
             }
-          } else if (isUserSelected) {
-            stateClasses =
-              "border-brand-500 bg-brand-50 dark:bg-brand-950/30 text-brand-900 dark:text-brand-200 font-medium ring-1 ring-brand-500";
           }
 
           optionDiv.className = `p-3.5 rounded-xl border transition cursor-pointer flex items-start gap-3 ${stateClasses}`;
@@ -1568,9 +1548,7 @@
               statusIcon = `<div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600 mt-0.5"></div>`;
             }
           } else {
-            statusIcon = isUserSelected
-              ? `<i class="fa-solid fa-circle-dot text-brand-600 dark:text-brand-400 mt-0.5"></i>`
-              : `<div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600 mt-0.5"></div>`;
+            statusIcon = `<div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600 mt-0.5"></div>`;
           }
 
           optionDiv.innerHTML = `
@@ -1580,18 +1558,18 @@
                     </div>
                 `;
 
-          if (!isChecked) {
-            optionDiv.addEventListener("click", () => {
-              userAnswers[testId][currentQuestionIndex] = optIdx;
-              renderQuestionGrid();
-              renderQuestion();
-            });
-          }
+          // CẬP NHẬT TẠI ĐÂY: Click phương án -> Tự kiểm tra luôn
+          optionDiv.addEventListener("click", () => {
+            userAnswers[testId][currentQuestionIndex] = optIdx;
+            checkedStatus[testId][currentQuestionIndex] = true;
+            renderQuestionGrid();
+            renderQuestion();
+            updateScoreBadge();
+          });
 
           optionsContainer.appendChild(optionDiv);
         });
 
-        // Feedback & Explanation
         if (isChecked) {
           explanationBox.classList.remove("hidden");
           const isCorrect = savedAns === q.answer;
@@ -1619,19 +1597,10 @@
           explanationBox.classList.add("hidden");
         }
 
-        // Controls update
         prevBtn.disabled = currentQuestionIndex === 0;
         nextBtn.disabled = currentQuestionIndex === test.questions.length - 1;
-
-        checkBtn.disabled = savedAns === undefined;
-        if (savedAns === undefined) {
-          checkBtn.classList.add("opacity-50", "cursor-not-allowed");
-        } else {
-          checkBtn.classList.remove("opacity-50", "cursor-not-allowed");
-        }
       }
 
-      // TÍNH ĐIỂM
       function updateScoreBadge() {
         const test = ALL_TESTS[currentTestIndex];
         const testId = test.id;
@@ -1653,7 +1622,6 @@
         }
       }
 
-      // EVEN LISTENERS CHO BUTTONS
       prevBtn.addEventListener("click", () => {
         if (currentQuestionIndex > 0) {
           currentQuestionIndex--;
@@ -1673,17 +1641,6 @@
         }
       });
 
-      checkBtn.addEventListener("click", () => {
-        const test = ALL_TESTS[currentTestIndex];
-        const testId = test.id;
-        if (userAnswers[testId][currentQuestionIndex] !== undefined) {
-          checkedStatus[testId][currentQuestionIndex] = true;
-          renderQuestionGrid();
-          renderQuestion();
-          updateScoreBadge();
-        }
-      });
-
       resetBtn.addEventListener("click", () => {
         if (
           confirm("Bạn có chắc chắn muốn xóa hết lựa chọn và làm lại đề này?")
@@ -1699,7 +1656,6 @@
         }
       });
 
-      // CHẠY ỨNG DỤNG
       document.addEventListener("DOMContentLoaded", initApp);
     </script>
   </body>
