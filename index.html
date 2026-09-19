@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Business Translation - Ôn Tập Trắc Nghiệm Full</title>
+    <title>Business Translation - Ôn Tập Spaced Repetition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -59,12 +59,16 @@
       >
         <div class="flex items-center space-x-2">
           <i
-            class="fa-solid fa-graduation-cap text-brand-600 dark:text-brand-400 text-2xl"
+            class="fa-solid fa-brain text-brand-600 dark:text-brand-400 text-2xl"
           ></i>
           <h1
             class="font-bold text-lg md:text-xl text-slate-900 dark:text-white"
           >
             Business Translation
+            <span
+              class="text-xs px-2 py-0.5 rounded bg-brand-100 text-brand-700 dark:bg-brand-900/60 dark:text-brand-300"
+              >SRS</span
+            >
           </h1>
         </div>
         <button
@@ -89,6 +93,43 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-4xl mx-auto px-4 py-6 flex-1 w-full">
       <div id="quizApp" class="space-y-6">
+        <!-- DASHBOARD SPACED REPETITION -->
+        <div
+          class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4"
+        >
+          <div class="flex items-center gap-4 text-xs md:text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-slate-400"></span>
+              <span>Chưa học: <strong id="countNew">0</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+              <span>Cần ôn phiên này: <strong id="countReview">0</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <span>Đã thuộc: <strong id="countMastered">0</strong></span>
+            </div>
+          </div>
+
+          <!-- BỘ LỌC CHẾ ĐỘ HỌC -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <label
+              for="filterMode"
+              class="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap"
+              >Chế độ:</label
+            >
+            <select
+              id="filterMode"
+              class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-none rounded-lg px-3 py-2 font-medium focus:ring-2 focus:ring-brand-500"
+            >
+              <option value="all">Tất cả câu hỏi</option>
+              <option value="due">Chỉ câu đến hạn ôn</option>
+              <option value="weak">Chỉ câu hay sai / khó</option>
+            </select>
+          </div>
+        </div>
+
         <!-- HEADER CÂU HỎI & PROGRESS -->
         <div
           id="quizHeader"
@@ -113,13 +154,13 @@
               id="scoreBadge"
               class="hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800"
             >
-              Đã nộp: <span id="scoreText">0/0</span>
+              Đã làm: <span id="scoreText">0/0</span>
             </span>
             <button
               id="resetBtn"
               class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
             >
-              <i class="fa-solid fa-rotate-right mr-1"></i> Làm lại
+              <i class="fa-solid fa-rotate-right mr-1"></i> Đặt lại SRS đề này
             </button>
           </div>
         </div>
@@ -142,11 +183,21 @@
         <div
           class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 md:p-6 transition-all"
         >
+          <div class="flex justify-between items-start gap-2 mb-3">
+            <div
+              id="questionContent"
+              class="text-base md:text-lg font-semibold text-slate-900 dark:text-slate-100 leading-relaxed"
+            >
+              <!-- Question text injected by JS -->
+            </div>
+          </div>
+
+          <!-- THÔNG TIN SRS CỦA CÂU HỎI -->
           <div
-            id="questionContent"
-            class="text-base md:text-lg font-semibold text-slate-900 dark:text-slate-100 mb-5 leading-relaxed"
+            id="srsMeta"
+            class="text-xs text-slate-400 dark:text-slate-500 mb-4 flex items-center gap-3 border-b border-slate-100 dark:border-slate-700/50 pb-2"
           >
-            <!-- Question text injected by JS -->
+            <!-- SRS Status metadata -->
           </div>
 
           <!-- OPTIONS -->
@@ -187,7 +238,8 @@
     <footer
       class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-4 text-center text-xs text-slate-500 dark:text-slate-400 mt-8"
     >
-      Môn học: Business Translation • Interactive Test App
+      Môn học: Business Translation • Interactive Test App with Adaptive Spaced
+      Repetition
     </footer>
 
     <script>
@@ -765,7 +817,7 @@
               options: [
                 "That's absurd.",
                 "I can't go along with you there.",
-                "I think you're wrong.",
+                "I think you'wrong.",
                 "That's really how I see it.",
               ],
               answer: 1,
@@ -1216,7 +1268,7 @@
                 "Mailing address",
               ],
               answer: 2,
-              exp: "Bổ sung đáp án: Các thông tin được nêu nhưng không chứa tên tài khoản (usernames) cụ thể cho Twitter/Facebook.",
+              exp: "Các thông tin được nêu nhưng không chứa tên tài khoản (usernames) cụ thể cho Twitter/Facebook.",
             },
             {
               q: "What does the professional website showcase?",
@@ -1367,9 +1419,12 @@
 
       // --- STATE MANAGEMENT ---
       let currentTestIndex = 0;
-      let currentQuestionIndex = 0;
+      let sessionSequence = []; // Danh sách thứ tự index câu hỏi trong phiên học hiện tại
+      let sessionPointer = 0; // Vị trí con trỏ hiện tại trong sessionSequence
+
       let userAnswers = {};
       let checkedStatus = {};
+      let srsData = {};
 
       // DOM ELEMENTS
       const tabsContainer = document.getElementById("tabsContainer");
@@ -1387,6 +1442,12 @@
       const themeToggle = document.getElementById("themeToggle");
       const themeIcon = document.getElementById("themeIcon");
       const questionAnchor = document.getElementById("questionAnchor");
+      const filterMode = document.getElementById("filterMode");
+
+      const countNew = document.getElementById("countNew");
+      const countReview = document.getElementById("countReview");
+      const countMastered = document.getElementById("countMastered");
+      const srsMeta = document.getElementById("srsMeta");
 
       // --- DARK MODE LOGIC ---
       function initTheme() {
@@ -1415,14 +1476,133 @@
         }
       });
 
+      // --- SPACED REPETITION LOGIC ---
+      function loadSrsData() {
+        const saved = localStorage.getItem("bts_srs_data");
+        if (saved) {
+          try {
+            srsData = JSON.parse(saved);
+          } catch (e) {
+            srsData = {};
+          }
+        }
+      }
+
+      function saveSrsData() {
+        localStorage.setItem("bts_srs_data", JSON.stringify(srsData));
+      }
+
+      function getQuestionSrs(testId, qIndex) {
+        if (!srsData[testId]) srsData[testId] = {};
+        if (!srsData[testId][qIndex]) {
+          srsData[testId][qIndex] = {
+            repetition: 0,
+            interval: 0,
+            easiness: 2.5,
+            nextDueDate: null,
+            lastReviewed: null,
+            historyCount: 0,
+            wrongCount: 0,
+          };
+        }
+        return srsData[testId][qIndex];
+      }
+
+      function updateSrsItem(testId, qIndex, isCorrect) {
+        const item = getQuestionSrs(testId, qIndex);
+        const now = Date.now();
+        item.lastReviewed = now;
+        item.historyCount += 1;
+
+        if (!isCorrect) {
+          item.wrongCount += 1;
+          item.repetition = 0;
+          item.interval = 1;
+        } else {
+          if (item.repetition === 0) {
+            item.interval = 1;
+          } else if (item.repetition === 1) {
+            item.interval = 3;
+          } else {
+            item.interval = Math.round(item.interval * item.easiness);
+          }
+          item.repetition += 1;
+          item.easiness = Math.max(1.3, item.easiness + 0.1);
+        }
+
+        const nextDate = new Date(now);
+        nextDate.setDate(nextDate.getDate() + item.interval);
+        item.nextDueDate = nextDate.getTime();
+
+        saveSrsData();
+      }
+
+      function buildSessionSequence() {
+        const test = ALL_TESTS[currentTestIndex];
+        const mode = filterMode.value;
+        const list = [];
+
+        test.questions.forEach((_, idx) => {
+          const item = getQuestionSrs(test.id, idx);
+          if (mode === "all") {
+            list.push(idx);
+          } else if (mode === "due") {
+            const isDue = !item.nextDueDate || item.nextDueDate <= Date.now();
+            if (isDue) list.push(idx);
+          } else if (mode === "weak") {
+            if (item.wrongCount > 0 || item.easiness < 2.3) list.push(idx);
+          }
+        });
+
+        sessionSequence =
+          list.length > 0 ? list : test.questions.map((_, i) => i);
+        sessionPointer = 0;
+      }
+
+      function updateDashboardStats() {
+        const test = ALL_TESTS[currentTestIndex];
+        let newCount = 0;
+        let reviewCount = 0;
+        let masteredCount = 0;
+
+        test.questions.forEach((_, idx) => {
+          const item = getQuestionSrs(test.id, idx);
+          if (item.historyCount === 0) {
+            newCount++;
+          } else if (item.repetition >= 3) {
+            masteredCount++;
+          }
+        });
+
+        // Tính số câu cần ôn trong hàng chờ phiên hiện tại
+        const remainingInSession = sessionSequence
+          .slice(sessionPointer)
+          .filter((qIdx) => {
+            return (
+              checkedStatus[test.id][qIdx] !== true ||
+              userAnswers[test.id][qIdx] !== test.questions[qIdx].answer
+            );
+          }).length;
+
+        countNew.textContent = newCount;
+        countReview.textContent = remainingInSession;
+        countMastered.textContent = masteredCount;
+      }
+
       // --- APP INITIALIZATION ---
       function initApp() {
         initTheme();
+        loadSrsData();
         renderTabs();
         loadTest(0);
       }
 
-      // RENDER TABS
+      filterMode.addEventListener("change", () => {
+        buildSessionSequence();
+        renderQuestionGrid();
+        renderQuestion();
+      });
+
       function renderTabs() {
         tabsContainer.innerHTML = "";
         ALL_TESTS.forEach((test, idx) => {
@@ -1436,7 +1616,6 @@
           button.addEventListener("click", () => {
             if (currentTestIndex !== idx) {
               currentTestIndex = idx;
-              currentQuestionIndex = 0;
               renderTabs();
               loadTest(currentTestIndex);
               scrollToQuestion();
@@ -1460,6 +1639,8 @@
         }
 
         currentTestTitle.textContent = test.title;
+        buildSessionSequence();
+        updateDashboardStats();
         renderQuestionGrid();
         renderQuestion();
         updateScoreBadge();
@@ -1468,10 +1649,14 @@
       function renderQuestionGrid() {
         questionGrid.innerHTML = "";
         const test = ALL_TESTS[currentTestIndex];
+        const currentQIndex = sessionSequence[sessionPointer];
 
-        test.questions.forEach((_, idx) => {
+        // Lấy danh sách duy nhất các câu hỏi xuất hiện trong phiên
+        const uniqueIndices = Array.from(new Set(sessionSequence));
+
+        uniqueIndices.forEach((idx) => {
           const btn = document.createElement("button");
-          const isSelected = idx === currentQuestionIndex;
+          const isSelected = idx === currentQIndex;
           const userAns = userAnswers[test.id][idx];
           const isChecked = checkedStatus[test.id][idx];
 
@@ -1496,10 +1681,14 @@
           btn.className = `w-8 h-8 md:w-9 md:h-9 text-xs rounded-lg border flex items-center justify-center transition ${bgClasses}`;
           btn.textContent = idx + 1;
           btn.addEventListener("click", () => {
-            currentQuestionIndex = idx;
-            renderQuestionGrid();
-            renderQuestion();
-            scrollToQuestion();
+            // Tìm vị trí tương ứng trong chuỗi sequence
+            const foundPointer = sessionSequence.indexOf(idx);
+            if (foundPointer !== -1) {
+              sessionPointer = foundPointer;
+              renderQuestionGrid();
+              renderQuestion();
+              scrollToQuestion();
+            }
           });
           questionGrid.appendChild(btn);
         });
@@ -1507,16 +1696,46 @@
 
       function renderQuestion() {
         const test = ALL_TESTS[currentTestIndex];
-        const q = test.questions[currentQuestionIndex];
+        const currentQIndex = sessionSequence[sessionPointer];
+        const q = test.questions[currentQIndex];
         const testId = test.id;
-        const savedAns = userAnswers[testId][currentQuestionIndex];
-        const isChecked = checkedStatus[testId][currentQuestionIndex];
 
-        questionCounter.textContent = `Câu ${currentQuestionIndex + 1} / ${test.questions.length}`;
-        questionContent.innerHTML = `<span class="text-brand-600 dark:text-brand-400 font-bold mr-1">Câu ${currentQuestionIndex + 1}:</span> ${q.q}`;
+        const savedAns = userAnswers[testId][currentQIndex];
+        const isChecked = checkedStatus[testId][currentQIndex];
+        const srsItem = getQuestionSrs(testId, currentQIndex);
+
+        questionCounter.textContent = `Câu ${currentQIndex + 1} / ${test.questions.length} (Phiên ôn: ${sessionPointer + 1}/${sessionSequence.length})`;
+        questionContent.innerHTML = `<span class="text-brand-600 dark:text-brand-400 font-bold mr-1">Câu ${currentQIndex + 1}:</span> ${q.q}`;
+
+        // SRS Meta info display
+        let srsStatusText = "Chưa học";
+        if (srsItem.historyCount > 0) {
+          if (srsItem.repetition >= 3) srsStatusText = "Đã thuộc";
+          else srsStatusText = `Đang ôn (Lần lặp: ${srsItem.repetition})`;
+        }
+
+        let dueDateText = "Ngay bây giờ";
+        if (srsItem.nextDueDate && srsItem.nextDueDate > Date.now()) {
+          const daysLeft = Math.ceil(
+            (srsItem.nextDueDate - Date.now()) / (1000 * 60 * 60 * 24),
+          );
+          dueDateText = `Sau ${daysLeft} ngày`;
+        }
+
+        srsMeta.innerHTML = `
+          <span><i class="fa-solid fa-clock-rotate-left mr-1"></i> Trạng thái: <strong>${srsStatusText}</strong></span>
+          <span><i class="fa-solid fa-calendar-day mr-1"></i> Ôn lại tiếp: <strong>${dueDateText}</strong></span>
+        `;
 
         optionsContainer.innerHTML = "";
         const labels = ["A", "B", "C", "D"];
+
+        // Khóa tùy chọn nếu đã bấm trả lời lượt này
+        if (isChecked) {
+          optionsContainer.classList.add("pointer-events-none");
+        } else {
+          optionsContainer.classList.remove("pointer-events-none");
+        }
 
         q.options.forEach((optText, optIdx) => {
           const optionDiv = document.createElement("div");
@@ -1524,19 +1743,21 @@
           const isCorrectOpt = optIdx === q.answer;
 
           let stateClasses =
-            "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200";
+            "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200 cursor-pointer";
 
           if (isChecked) {
+            stateClasses =
+              "border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 cursor-default opacity-80";
             if (isCorrectOpt) {
               stateClasses =
-                "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-100 font-medium";
+                "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-100 font-medium opacity-100";
             } else if (isUserSelected && !isCorrectOpt) {
               stateClasses =
-                "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-100 font-medium";
+                "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-100 font-medium opacity-100";
             }
           }
 
-          optionDiv.className = `p-3.5 rounded-xl border transition cursor-pointer flex items-start gap-3 ${stateClasses}`;
+          optionDiv.className = `p-3.5 rounded-xl border transition flex items-start gap-3 ${stateClasses}`;
 
           let statusIcon = "";
           if (isChecked) {
@@ -1558,10 +1779,28 @@
                     </div>
                 `;
 
-          // CẬP NHẬT TẠI ĐÂY: Click phương án -> Tự kiểm tra luôn
+          // Xử lý sự kiện click
           optionDiv.addEventListener("click", () => {
-            userAnswers[testId][currentQuestionIndex] = optIdx;
-            checkedStatus[testId][currentQuestionIndex] = true;
+            if (checkedStatus[testId][currentQIndex]) return;
+
+            const isCorrect = optIdx === q.answer;
+            userAnswers[testId][currentQIndex] = optIdx;
+            checkedStatus[testId][currentQIndex] = true;
+
+            // Nếu trả lời SAI, tự động chèn lại câu hỏi này vào phía sau trong chuỗi sequence
+            if (!isCorrect) {
+              // Chèn lại sau 2 câu nữa (hoặc ở cuối chuỗi)
+              const insertAt = Math.min(
+                sessionPointer + 3,
+                sessionSequence.length,
+              );
+              sessionSequence.splice(insertAt, 0, currentQIndex);
+            }
+
+            // Cập nhật SRS Engine
+            updateSrsItem(testId, currentQIndex, isCorrect);
+            updateDashboardStats();
+
             renderQuestionGrid();
             renderQuestion();
             updateScoreBadge();
@@ -1587,7 +1826,7 @@
               "mt-6 p-4 rounded-xl border border-rose-300 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 text-sm";
             explanationBox.innerHTML = `
                         <div class="font-bold text-rose-700 dark:text-rose-400 mb-1 flex items-center gap-1.5">
-                            <i class="fa-solid fa-xmark"></i> Chưa đúng!
+                            <i class="fa-solid fa-rotate-left"></i> Chưa đúng! (Câu này sẽ được lặp lại ở các câu tiếp theo để bạn làm lại)
                         </div>
                         <div class="mb-1"><strong>Đáp án đúng:</strong> ${labels[q.answer]}. ${q.options[q.answer]}</div>
                         <div><strong>Giải thích:</strong> ${q.exp}</div>
@@ -1597,8 +1836,8 @@
           explanationBox.classList.add("hidden");
         }
 
-        prevBtn.disabled = currentQuestionIndex === 0;
-        nextBtn.disabled = currentQuestionIndex === test.questions.length - 1;
+        prevBtn.disabled = sessionPointer <= 0;
+        nextBtn.disabled = sessionPointer >= sessionSequence.length - 1;
       }
 
       function updateScoreBadge() {
@@ -1623,8 +1862,8 @@
       }
 
       prevBtn.addEventListener("click", () => {
-        if (currentQuestionIndex > 0) {
-          currentQuestionIndex--;
+        if (sessionPointer > 0) {
+          sessionPointer--;
           renderQuestionGrid();
           renderQuestion();
           scrollToQuestion();
@@ -1632,9 +1871,22 @@
       });
 
       nextBtn.addEventListener("click", () => {
-        const test = ALL_TESTS[currentTestIndex];
-        if (currentQuestionIndex < test.questions.length - 1) {
-          currentQuestionIndex++;
+        if (sessionPointer < sessionSequence.length - 1) {
+          sessionPointer++;
+
+          const currentQIndex = sessionSequence[sessionPointer];
+          const testId = ALL_TESTS[currentTestIndex].id;
+
+          // Nếu chuyển sang câu đã từng làm sai và quay lại lượt mới, reset trạng thái checked lượt mới
+          if (
+            checkedStatus[testId][currentQIndex] &&
+            userAnswers[testId][currentQIndex] !==
+              ALL_TESTS[currentTestIndex].questions[currentQIndex].answer
+          ) {
+            delete checkedStatus[testId][currentQIndex];
+            delete userAnswers[testId][currentQIndex];
+          }
+
           renderQuestionGrid();
           renderQuestion();
           scrollToQuestion();
@@ -1643,12 +1895,19 @@
 
       resetBtn.addEventListener("click", () => {
         if (
-          confirm("Bạn có chắc chắn muốn xóa hết lựa chọn và làm lại đề này?")
+          confirm(
+            "Bạn có chắc chắn muốn xóa tiến trình ôn tập SRS và lựa chọn của đề này?",
+          )
         ) {
           const testId = ALL_TESTS[currentTestIndex].id;
           userAnswers[testId] = {};
           checkedStatus[testId] = {};
-          currentQuestionIndex = 0;
+          if (srsData[testId]) {
+            delete srsData[testId];
+            saveSrsData();
+          }
+          buildSessionSequence();
+          updateDashboardStats();
           renderQuestionGrid();
           renderQuestion();
           updateScoreBadge();
